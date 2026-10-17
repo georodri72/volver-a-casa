@@ -20,3 +20,5 @@ td.fare{color:var(--muted)}
 .tile:hover{border-color:var(--blue)}.tile span{color:var(--muted);font-size:.9rem}
 li{margin:.45em 0}.cite{display:block;font-size:.8rem;color:var(--muted)}.cite a{color:var(--blue)}
 footer{border-top:1px solid var(--line);color:var(--muted);font-size:.85rem;padding:16px 0 30px}
+a.book{display:inline-block;margin-top:4px;font-size:.85rem;color:var(--blue);font-weight:600}
+td.fare b{color:var(--ink)}

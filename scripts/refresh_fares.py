@@ -1,54 +1,83 @@
 #!/usr/bin/env python3
-"""Fetch cached fares US -> SAL from the Travelpayouts / Aviasales Data API and
-write public/data/fares.json. Does nothing (and leaves the 'coming soon' state)
-if TRAVELPAYOUTS_TOKEN is not set. Uses only the standard library.
+"""Fetch cached round-trip fares US -> SAL from the Travelpayouts / Aviasales Data API and
+write public/data/fares.json. If TRAVELPAYOUTS_TOKEN is not set it does nothing, so the
+'coming soon' state stays. Standard library only. Never prints or stores the token.
 
 Docs: https://support.travelpayouts.com/hc/en-us/articles/203956163-Aviasales-Data-API
-Endpoint: /aviasales/v3/prices_for_dates (cheapest tickets found by Aviasales users, last 48h)
+Affiliate link: Aviasales page URL + marker=<partner ID>
+  (https://support.travelpayouts.com/hc/ru/articles/5711895629714 , manual link templates)
 """
-import json, os, sys, time, urllib.parse, urllib.request
+import json, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone
 
 ORIGINS = ["LAX", "ONT", "IAD", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "BOS", "MIA", "ATL"]
 DEST = "SAL"
-OUT = os.path.join(os.path.dirname(__file__), "..", "public", "data", "fares.json")
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "data", "fares.json")
 API = "https://api.travelpayouts.com/aviasales/v3/prices_for_dates"
+DEFAULT_MARKER = "791370"  # public affiliate ID
+
+def found_on(link):
+    """Aviasales links carry search_date=DDMMYYYY: the day the price was found."""
+    m = re.search(r"[?&]search_date=(\d{2})(\d{2})(\d{4})", link or "")
+    return f"{m.group(3)}-{m.group(2)}-{m.group(1)}" if m else None
+
+def affiliate_link(link, marker):
+    if not link:
+        return None
+    url = "https://www.aviasales.com" + link
+    return url + ("&" if "?" in url else "?") + "marker=" + urllib.parse.quote(marker)
+
+def fetch(origin, token):
+    q = urllib.parse.urlencode({"origin": origin, "destination": DEST, "currency": "usd", "market": "us",
+                                "one_way": "false", "sorting": "price", "limit": 30, "page": 1})
+    req = urllib.request.Request(f"{API}?{q}", headers={"X-Access-Token": token})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.load(r)
 
 def main():
     token = os.environ.get("TRAVELPAYOUTS_TOKEN", "").strip()
-    marker = os.environ.get("TRAVELPAYOUTS_MARKER", "").strip()
+    marker = os.environ.get("TRAVELPAYOUTS_MARKER", "").strip() or DEFAULT_MARKER
     if not token:
-        print("TRAVELPAYOUTS_TOKEN not set; leaving fares.json unchanged (coming-soon state).")
+        print("TRAVELPAYOUTS_TOKEN not set; leaving fares.json unchanged.")
         return 0
-    fares = []
+    now = datetime.now(timezone.utc)
+    fares, empty = [], []
     for o in ORIGINS:
-        q = urllib.parse.urlencode({"origin": o, "destination": DEST, "currency": "usd", "market": "us",
-                                    "one_way": "false", "sorting": "price", "limit": 1, "page": 1})
-        req = urllib.request.Request(f"{API}?{q}", headers={"X-Access-Token": token, "Accept-Encoding": "identity"})
         try:
-            with urllib.request.urlopen(req, timeout=30) as r:
-                d = json.load(r)
-        except Exception as e:  # keep going; a missing route just shows "no recent data"
-            print(f"{o}: error {e}", file=sys.stderr); continue
+            d = fetch(o, token)
+        except Exception as e:
+            print(f"{o}: request failed ({type(e).__name__})", file=sys.stderr); empty.append(o); continue
         rows = (d.get("data") or []) if d.get("success") else []
-        if not rows:
-            print(f"{o}: no cached data"); continue
-        t = rows[0]
-        link = None
-        # Affiliate deep link: only when a marker is configured. VERIFY the exact deep-link
-        # format in the Travelpayouts dashboard ("deep link creation form") before enabling.
-        if marker and t.get("link"):
-            link = "https://www.aviasales.com" + t["link"] + "&marker=" + urllib.parse.quote(marker)
-        fares.append({"origin": o, "destination": DEST, "price": t.get("price"), "currency": "usd",
-                      "airline": t.get("airline"), "transfers": t.get("transfers"),
-                      "departure_month": (t.get("departure_at") or "")[:7], "round_trip": bool(t.get("return_at")),
-                      "found_at": datetime.now(timezone.utc).isoformat(), "link": link})
-        time.sleep(1)  # be gentle; documented rate limits not verified (see launch_plan.md)
-    data = {"status": "live" if fares else "pending", "source": "Aviasales via Travelpayouts",
-            "updated_at": datetime.now(timezone.utc).isoformat(), "fares": fares}
+        good = []
+        for t in rows:
+            try:
+                dep = datetime.fromisoformat(t["departure_at"])
+            except Exception:
+                continue
+            # sanity: exact airports, future departure, real positive price, has link
+            if (t.get("origin_airport") == o and t.get("destination_airport") == DEST and dep > now
+                    and isinstance(t.get("price"), (int, float)) and t["price"] > 0 and t.get("link")):
+                good.append(t)
+        if not good:
+            print(f"{o}: no recent fares"); empty.append(o); continue
+        t = min(good, key=lambda x: x["price"])
+        fares.append({
+            "origin": o, "destination": DEST, "price": t["price"], "currency": "usd",
+            "round_trip": bool(t.get("return_at")), "airline": t.get("airline"),
+            "transfers": t.get("transfers"), "return_transfers": t.get("return_transfers"),
+            "departure_at": t["departure_at"], "return_at": t.get("return_at"),
+            "departure_month": t["departure_at"][:7], "found_on": found_on(t["link"]),
+            "link": affiliate_link(t["link"], marker),
+        })
+        print(f"{o}: ${t['price']} depart {t['departure_at'][:10]} found {found_on(t['link'])}")
+        time.sleep(0.5)
+    data = {"status": "live" if fares else "pending", "source": "Aviasales (Travelpayouts Data API)",
+            "updated_at": now.isoformat(timespec="seconds"), "currency": "usd", "market": "us",
+            "no_data": empty, "fares": fares}
     with open(OUT, "w") as f:
         json.dump(data, f, indent=2)
-    print(f"wrote {len(fares)} fares")
+        f.write("\n")
+    print(f"wrote {len(fares)} fares; no data: {empty}")
     return 0
 
 if __name__ == "__main__":
