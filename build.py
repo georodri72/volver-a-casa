@@ -105,7 +105,7 @@ def build():
   {"Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados: verá tarifas reales aquí cuando estén disponibles." if es else "We are connecting a licensed price data source. We never show sample or made-up prices: real fares will appear here once they are available."}
  </div>
  <table class="fares" id="fares-table">
-  <thead><tr><th>{"Área" if es else "Metro area"}</th><th>{"Ruta" if es else "Route"}</th><th>{"Tarifa más baja encontrada" if es else "Lowest fare found"}</th></tr></thead>
+  <thead><tr><th>{"Área" if es else "Metro area"}</th><th>{"Ruta" if es else "Route"}</th><th>{"Visto recientemente (últimas 48 h)" if es else "Recently seen (last 48 h)"}</th></tr></thead>
   <tbody>{rows}</tbody>
  </table>
  <p class="small">{"Aeropuertos de las 10 áreas metropolitanas con más población de origen salvadoreño (Censo de EE. UU., ACS 2024)." if es else "Airports serving the 10 US metro areas with the largest Salvadoran-origin populations (US Census Bureau, ACS 2024 1-year, table B03001)."}</p>

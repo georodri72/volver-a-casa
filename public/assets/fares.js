@@ -1,60 +1,53 @@
 // Renders fares ONLY from data/fares.json written by scripts/refresh_fares.py (Travelpayouts API).
-// If status isn't "live", the "fares coming soon" notice stays and no numbers are shown.
+// Shows only fares whose found_at is within max_age_hours (48 h) at the moment the page is viewed.
 (function () {
   var es = location.pathname.indexOf('/es/') !== -1;
   var loc = es ? 'es-SV' : 'en-US';
   var url = (es ? '../' : '') + 'data/fares.json';
-  function ago(dateStr) {
-    if (!dateStr) return '';
-    var days = Math.floor((Date.now() - new Date(dateStr + 'T12:00:00Z').getTime()) / 86400000);
-    if (days <= 0) return es ? 'hoy' : 'today';
-    if (days === 1) return es ? 'hace 1 día' : '1 day ago';
-    return es ? 'hace ' + days + ' días' : days + ' days ago';
+  function ago(ms) {
+    var h = Math.floor(ms / 3600000);
+    if (h < 1) return es ? 'hace menos de 1 hora' : 'less than 1 hour ago';
+    if (h < 24) return es ? 'hace ' + h + (h === 1 ? ' hora' : ' horas') : h + (h === 1 ? ' hour ago' : ' hours ago');
+    var dd = Math.floor(h / 24);
+    return es ? 'hace ' + dd + (dd === 1 ? ' día' : ' días') : dd + (dd === 1 ? ' day ago' : ' days ago');
   }
-  function d(iso) { // show the local calendar date as written in the itinerary
+  function d(iso) { // itinerary calendar date as written (local to the airport)
     var p = iso.slice(0, 10).split('-');
     return new Date(Date.UTC(+p[0], +p[1] - 1, +p[2], 12)).toLocaleDateString(loc, { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
   }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
   fetch(url, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (data) {
     if (!data || data.status !== 'live' || !Array.isArray(data.fares)) return;
-    var byCode = {};
+    var maxAge = (data.max_age_hours || 48) * 3600000, now = Date.now(), byCode = {};
     data.fares.forEach(function (f) {
-      if (f && f.origin && typeof f.price === 'number' && f.price > 0 && f.currency && f.departure_at) byCode[f.origin] = f;
+      if (!f || !f.origin || typeof f.price !== 'number' || f.price <= 0 || !f.currency || !f.found_at || !f.departure_at) return;
+      var age = now - new Date(f.found_at).getTime();
+      if (age >= 0 && age <= maxAge && new Date(f.departure_at).getTime() > now) { f._age = age; byCode[f.origin] = f; }
     });
     var shown = 0;
     document.querySelectorAll('#fares-table tbody tr').forEach(function (tr) {
       var f = byCode[tr.getAttribute('data-code')], td = tr.querySelector('.fare');
       td.innerHTML = '';
-      if (!f) { td.textContent = es ? 'Sin tarifas recientes' : 'No recent fares'; return; }
+      if (!f) { td.appendChild(el('span', 'small', es ? 'Sin tarifas recientes' : 'No recent fares')); return; }
       shown++;
+      td.appendChild(el('div', 'found', (es ? 'Visto ' : 'Seen ') + ago(f._age)));
       var price = new Intl.NumberFormat(loc, { style: 'currency', currency: f.currency.toUpperCase(), maximumFractionDigits: 0 }).format(f.price);
-      var strong = document.createElement('b');
-      strong.textContent = price + (f.round_trip ? (es ? ' ida y vuelta' : ' round trip') : (es ? ' solo ida' : ' one way'));
-      td.appendChild(strong);
-      var stops = f.transfers === 0 ? (es ? 'directo (ida)' : 'nonstop out') : (f.transfers != null ? f.transfers + (es ? ' escala(s) ida' : ' stop(s) out') : '');
-      var s = document.createElement('div'); s.className = 'small';
-      s.textContent = d(f.departure_at) + (f.return_at ? ' – ' + d(f.return_at) : '') + (stops ? ' · ' + stops : '') + (f.airline ? ' · ' + f.airline : '');
-      td.appendChild(s);
-      var s2 = document.createElement('div'); s2.className = 'small';
-      s2.textContent = (es ? 'Encontrado ' : 'Found ') + ago(f.found_on);
-      td.appendChild(s2);
+      td.appendChild(el('b', null, (es ? 'Visto recientemente desde ' : 'Recently seen from ') + price + (es ? ' ida y vuelta' : ' round trip')));
+      var stops = f.transfers === 0 ? (es ? 'ida directa' : 'nonstop out') : (f.transfers != null ? f.transfers + (es ? (f.transfers === 1 ? ' escala ida' : ' escalas ida') : (f.transfers === 1 ? ' stop out' : ' stops out')) : '');
+      td.appendChild(el('div', 'small', (es ? 'Para ' : 'For ') + d(f.departure_at) + ' – ' + d(f.return_at) + (stops ? ' · ' + stops : '') + (f.airline ? ' · ' + f.airline : '') + (es ? ' · 1 adulto, económica' : ' · 1 adult, economy')));
       if (f.link) {
-        var a = document.createElement('a');
-        a.href = f.link; a.target = '_blank'; a.rel = 'noopener sponsored nofollow'; a.className = 'book';
-        a.textContent = es ? 'Ver vuelos →' : 'See flights →';
+        var a = el('a', 'book', es ? 'Ver precio de hoy →' : "Check today's price →");
+        a.href = f.link; a.target = '_blank'; a.rel = 'noopener sponsored nofollow';
         td.appendChild(a);
       }
     });
     var st = document.getElementById('fares-status');
-    if (shown) {
-      var upd = new Date(data.updated_at).toLocaleString(loc, { dateStyle: 'medium', timeStyle: 'short' });
-      st.innerHTML = '';
-      var b = document.createElement('b');
-      b.textContent = es ? 'Tarifas en caché de búsquedas recientes. Los precios pueden cambiar.' : 'Cached from recent searches. Prices may change.';
-      st.appendChild(b);
-      st.appendChild(document.createTextNode(' ' + (es
-        ? 'Son los precios más bajos que otros viajeros encontraron en Aviasales en los últimos días, no precios garantizados. Confirme el precio final antes de comprar (datos obtenidos: ' + upd + '). Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
-        : 'These are the lowest prices other travelers found on Aviasales in the past few days, not guaranteed prices. Confirm the final price before you buy (data fetched: ' + upd + '). Links are affiliate links: we may earn a commission at no extra cost to you.')));
-    }
+    var upd = new Date(data.updated_at).toLocaleString(loc, { dateStyle: 'medium', timeStyle: 'short' });
+    st.innerHTML = '';
+    st.appendChild(el('b', null, es ? 'Precios vistos recientemente, no precios garantizados.' : 'Recently seen prices, not guaranteed prices.'));
+    st.appendChild(document.createTextNode(' ' + (es
+      ? 'Mostramos solo tarifas que otros viajeros encontraron en Aviasales en las últimas 48 horas. Los boletos baratos se agotan rápido y el precio de hoy puede ser mucho más alto: toque «Ver precio de hoy» para buscar en vivo. Precio por 1 adulto, ida y vuelta, en clase económica. Datos revisados: ' + upd + '. Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
+      : "We only show fares other travelers found on Aviasales in the last 48 hours. Cheap seats sell out fast and today's price can be much higher: tap \u201cCheck today's price\u201d to search live. Price per 1 adult, round trip, economy. Data checked: " + upd + '. Links are affiliate links: we may earn a commission at no extra cost to you.')));
+    if (!shown) st.appendChild(el('div', 'small', es ? 'Ahora mismo no hay tarifas de las últimas 48 horas.' : 'No fares from the last 48 hours right now.'));
   }).catch(function () {});
 })();
