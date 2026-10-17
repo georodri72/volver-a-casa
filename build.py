@@ -132,7 +132,7 @@ def build():
 </section>
 <script src="{'../' if es else ''}assets/fares.js" defer></script>
 """
-        pages[(lang, "index.html")] = ("Volver a Casa" if es else "Volver a Casa", home)
+        pages[(lang, "index.html")] = ("Inicio" if es else "Home", home)
 
         # ---------- ENTRY ----------
         if es:

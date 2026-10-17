@@ -30,7 +30,7 @@ def main():
                 d = json.load(r)
         except Exception as e:  # keep going; a missing route just shows "no recent data"
             print(f"{o}: error {e}", file=sys.stderr); continue
-        rows = d.get("data") or [] if d.get("success") else []
+        rows = (d.get("data") or []) if d.get("success") else []
         if not rows:
             print(f"{o}: no cached data"); continue
         t = rows[0]
