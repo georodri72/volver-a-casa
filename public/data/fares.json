@@ -1,0 +1,7 @@
+{
+  "status": "pending",
+  "note": "No API key configured yet. Do not add sample numbers here; scripts/refresh_fares.py writes real data once TRAVELPAYOUTS_TOKEN is set.",
+  "source": null,
+  "updated_at": null,
+  "fares": []
+}

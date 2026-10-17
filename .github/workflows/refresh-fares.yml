@@ -1,0 +1,29 @@
+name: Refresh fares
+# Runs on GitHub Actions (free for public repos; private repos get a monthly free minutes quota).
+# Does nothing until the TRAVELPAYOUTS_TOKEN repository secret exists.
+on:
+  schedule:
+    - cron: "17 */6 * * *"   # every 6 hours (UTC)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Fetch fares
+        env:
+          TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
+          TRAVELPAYOUTS_MARKER: ${{ secrets.TRAVELPAYOUTS_MARKER }}
+        run: python3 scripts/refresh_fares.py
+      - name: Commit if changed
+        run: |
+          if git diff --quiet public/data/fares.json; then echo "no change"; exit 0; fi
+          git config user.name "fares-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add public/data/fares.json
+          git commit -m "Refresh fares"
+          git push
