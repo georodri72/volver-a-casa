@@ -53,8 +53,8 @@
       b.textContent = es ? 'Tarifas en caché de búsquedas recientes. Los precios pueden cambiar.' : 'Cached from recent searches. Prices may change.';
       st.appendChild(b);
       st.appendChild(document.createTextNode(' ' + (es
-        ? 'Son los precios más bajos que otros viajeros encontraron en Aviasales en los últimos días, no precios garantizados. Confirme el precio final antes de comprar. Datos obtenidos: ' + upd + '. Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
-        : 'These are the lowest prices other travelers found on Aviasales in the past few days, not guaranteed prices. Confirm the final price before you buy. Data fetched: ' + upd + '. Links are affiliate links: we may earn a commission at no extra cost to you.')));
+        ? 'Son los precios más bajos que otros viajeros encontraron en Aviasales en los últimos días, no precios garantizados. Confirme el precio final antes de comprar (datos obtenidos: ' + upd + '). Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
+        : 'These are the lowest prices other travelers found on Aviasales in the past few days, not guaranteed prices. Confirm the final price before you buy (data fetched: ' + upd + '). Links are affiliate links: we may earn a commission at no extra cost to you.')));
     }
   }).catch(function () {});
 })();
