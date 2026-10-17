@@ -46,8 +46,8 @@
     st.innerHTML = '';
     st.appendChild(el('b', null, es ? 'Precios vistos recientemente, no precios garantizados.' : 'Recently seen prices, not guaranteed prices.'));
     st.appendChild(document.createTextNode(' ' + (es
-      ? 'Mostramos solo tarifas que otros viajeros encontraron en Aviasales en las últimas 48 horas. Los boletos baratos se agotan rápido y el precio de hoy puede ser mucho más alto: toque «Ver precio de hoy» para buscar en vivo. Precio por 1 adulto, ida y vuelta, en clase económica. Datos revisados: ' + upd + '. Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
-      : "We only show fares other travelers found on Aviasales in the last 48 hours. Cheap seats sell out fast and today's price can be much higher: tap \u201cCheck today's price\u201d to search live. Price per 1 adult, round trip, economy. Data checked: " + upd + '. Links are affiliate links: we may earn a commission at no extra cost to you.')));
+      ? 'Mostramos solo tarifas que otros viajeros encontraron en Aviasales en las últimas 48 horas. Los boletos baratos se agotan rápido y el precio de hoy puede ser mucho más alto: toque «Ver precio de hoy» para buscar en vivo. Precio por 1 adulto, ida y vuelta, en clase económica (datos revisados: ' + upd + '). Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
+      : "We only show fares other travelers found on Aviasales in the last 48 hours. Cheap seats sell out fast and today's price can be much higher: tap \u201cCheck today's price\u201d to search live. Price per 1 adult, round trip, economy (data checked: " + upd + '). Links are affiliate links: we may earn a commission at no extra cost to you.')));
     if (!shown) st.appendChild(el('div', 'small', es ? 'Ahora mismo no hay tarifas de las últimas 48 horas.' : 'No fares from the last 48 hours right now.'));
   }).catch(function () {});
 })();
