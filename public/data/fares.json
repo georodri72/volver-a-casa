@@ -1,7 +1,7 @@
 {
   "status": "live",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-10-18T10:59:05+00:00",
+  "updated_at": "2026-10-18T15:49:22+00:00",
   "max_age_hours": 48,
   "currency": "usd",
   "market": "us",
@@ -30,18 +30,18 @@
     {
       "origin": "IAD",
       "destination": "SAL",
-      "price": 449,
+      "price": 351,
       "currency": "usd",
       "round_trip": true,
       "passengers": 1,
       "trip_class": "economy",
-      "airline": "AV",
-      "transfers": 0,
-      "return_transfers": 0,
-      "departure_at": "2026-10-31T19:35:00-04:00",
-      "return_at": "2026-11-08T22:05:00-06:00",
-      "found_at": "2026-10-18T03:07:26+00:00",
-      "link": "https://www.aviasales.com/search/IAD3110SAL08111?t=AV17934753001793484300000270IADSAL17941755001794194100000250SALIAD_1f4cc16a2b93676f3e27e7fa3f1667de_37111&search_date=18102026&expected_price_uuid=01a14cfa-79c9-8040-292f-1851ade57b9b&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=v23T5V9gjR4JfIdHNkrsag&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=449&marker=791370"
+      "airline": "CM",
+      "transfers": 1,
+      "return_transfers": 1,
+      "departure_at": "2026-11-27T01:16:00-05:00",
+      "return_at": "2026-12-14T04:57:00-06:00",
+      "found_at": "2026-10-18T12:36:02+00:00",
+      "link": "https://www.aviasales.com/search/IAD2711SAL14121?t=CM17957421601795783200000744IADPTYSAL17972242201797256680000481SALPTYIAD_69e50630be1ecc3fa4c9cc05f6a9f07e_29550&search_date=18102026&expected_price_uuid=01a14f03-0d3e-8040-262e-77bbc0d8b539&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=B85ZjgMSCth6nL0P8pMNoA&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=351&marker=791370"
     },
     {
       "origin": "JFK",
