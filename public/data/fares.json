@@ -1,31 +1,47 @@
 {
   "status": "live",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-10-18T15:49:22+00:00",
+  "updated_at": "2026-10-18T20:37:16+00:00",
   "max_age_hours": 48,
   "currency": "usd",
   "market": "us",
   "no_data": [
-    "ONT",
     "OAK",
-    "BOS"
+    "BOS",
+    "MIA"
   ],
   "fares": [
     {
       "origin": "LAX",
       "destination": "SAL",
-      "price": 316,
+      "price": 379,
       "currency": "usd",
       "round_trip": true,
       "passengers": 1,
       "trip_class": "economy",
       "airline": "UA",
       "transfers": 1,
+      "return_transfers": 1,
+      "departure_at": "2027-01-05T23:59:00-08:00",
+      "return_at": "2027-01-12T16:40:00-06:00",
+      "found_at": "2026-10-18T14:57:50+00:00",
+      "link": "https://www.aviasales.com/search/LAX0501SAL12011?t=UA17991935401799270340001160LAXIAHSAL17997720001799826420001027SALIAHLAX_ebc6c132770a1098aeb2269901b4c206_31873&search_date=18102026&expected_price_uuid=01a14f84-e01f-8040-293a-dfa93196b102&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=BX2Pkmc8euHiq9_EAjjyMQ&expected_price_source=share&expected_price_currency=usd&expected_price=379&marker=791370"
+    },
+    {
+      "origin": "ONT",
+      "destination": "SAL",
+      "price": 914,
+      "currency": "usd",
+      "round_trip": true,
+      "passengers": 1,
+      "trip_class": "economy",
+      "airline": "AA",
+      "transfers": 2,
       "return_transfers": 2,
-      "departure_at": "2026-11-09T05:45:00-08:00",
-      "return_at": "2026-11-22T16:40:00-06:00",
-      "found_at": "2026-10-16T19:57:12+00:00",
-      "link": "https://www.aviasales.com/search/LAX0911SAL22111?t=UA17942031001794259140000814LAXIAHSAL17953656001795436940001309SALIAHSFOONT_f5e3b31a5d759f77d3a6b3816cc9a3de_26239&search_date=16102026&expected_price_uuid=01a1464a-3a0c-8040-67c8-a6edd659b34b&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=qocYY_EsG7TGFVK38SJRAw&expected_price_source=share&expected_price_currency=usd&expected_price=316&marker=791370"
+      "departure_at": "2026-12-16T06:30:00-08:00",
+      "return_at": "2027-01-15T14:05:00-06:00",
+      "found_at": "2026-10-18T19:30:11+00:00",
+      "link": "https://www.aviasales.com/search/ONT1612SAL15011?t=AA17974026001797509820001667ONTPHXMIASAL18000219001800125460001846SALMIADFWONT_40c15793ff90a3f68fc90581d70f3595_76918&search_date=18102026&expected_price_uuid=01a1507e-3841-8040-a46c-0449e8b61241&static_fare_key=TY%7CP1%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=a5xSMjZby71ZpelqPcDWvg&expected_price_source=share&expected_price_currency=usd&expected_price=914&marker=791370"
     },
     {
       "origin": "IAD",
@@ -138,22 +154,6 @@
       "return_at": "2027-01-04T21:20:00-06:00",
       "found_at": "2026-10-18T04:01:06+00:00",
       "link": "https://www.aviasales.com/search/SFO2212SAL04011?t=F917979611401798030860001042SFOLAXATLSAL17990976001799237040002444SALGUALAXSFO_8b50d69c1deada9ef2416baf06a631b5_118494&search_date=18102026&expected_price_uuid=01a14d2b-9e89-8040-6cca-bc944361caee&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=rQ6ynlB0dYm92c2iV9Zmpg&expected_price_source=share&expected_price_currency=usd&expected_price=1434&marker=791370"
-    },
-    {
-      "origin": "MIA",
-      "destination": "SAL",
-      "price": 495,
-      "currency": "usd",
-      "round_trip": true,
-      "passengers": 1,
-      "trip_class": "economy",
-      "airline": "AV",
-      "transfers": 1,
-      "return_transfers": 1,
-      "departure_at": "2026-11-07T12:20:00-05:00",
-      "return_at": "2026-12-07T14:50:00-06:00",
-      "found_at": "2026-10-16T18:21:59+00:00",
-      "link": "https://www.aviasales.com/search/MIA0711SAL07121?t=AV17940540001794069000000310MIASJOSAL17966550001796698200000660SALBOGMIA_21ae650dd5a746dea004b8dacae2dc1f_41122&search_date=16102026&expected_price_uuid=01a145f3-0efb-8040-21d5-be3c234a8ec2&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=Od7xWFTyIJ-KbZ1a2OL2dQ&expected_price_source=share&expected_price_currency=usd&expected_price=495&marker=791370"
     },
     {
       "origin": "ATL",
