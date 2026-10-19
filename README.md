@@ -10,3 +10,12 @@ Plain static site, no framework, no dependencies.
 
 Preview locally: `cd public && python3 -m http.server 8000`
 Deploy: Render static site, build `python3 build.py`, publish dir `public` (see `render.yaml`).
+
+## Month view and price history
+- `scripts/refresh_calendar.py` writes `public/data/calendar.json`: cheapest round-trip fare seen per departure date
+  (next 12 months, active airports only) from Travelpayouts v3 `grouped_prices`. Each entry carries the date it was seen
+  (from the fare link's `search_date`); entries seen more than 7 days ago are dropped. Runs from the hourly workflow but
+  only refreshes every 6 h, and only rewrites the file when the data changed.
+- It also appends one line per UTC day to `data/history.jsonl` (append-only). The "When is it cheapest to fly" section on
+  `calendar.html` stays a placeholder until there are 28 daily snapshots, then shows medians of the daily cheapest by month.
+- `build.py` renders `calendar.html` statically from these files at build time (Render rebuilds on each data commit).

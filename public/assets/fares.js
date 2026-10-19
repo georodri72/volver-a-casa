@@ -50,6 +50,7 @@
       td.appendChild(el('div', 'found', es ? 'Tarifas como esta suelen agotarse en pocas horas; el precio de hoy puede ser mucho más alto.' : "Fares like this often sell out within hours; today's price may be much higher."));
       var stops = f.transfers === 0 ? (es ? 'ida directa' : 'nonstop out') : (f.transfers != null ? f.transfers + (es ? (f.transfers === 1 ? ' escala ida' : ' escalas ida') : (f.transfers === 1 ? ' stop out' : ' stops out')) : '');
       td.appendChild(el('div', 'small', (es ? 'Ida y vuelta, ' : 'Round trip, ') + d(f.departure_at) + ' – ' + d(f.return_at) + (stops ? ' · ' + stops : '') + (f.airline ? ' · ' + f.airline : '') + (es ? ' · 1 adulto, económica' : ' · 1 adult, economy')));
+        td.appendChild(el('div', 'small', es ? 'En dólares (USD). Puede no incluir todos los impuestos, cargos o equipaje: vea el total final en el sitio del vendedor.' : 'In US dollars. May not include all taxes, fees or bags: see the final total on the seller\u2019s site.'));
       if (f.link) {
         var a = el('a', 'book', es ? 'Ver precio de hoy →' : "Check today's price →");
         a.href = f.link; a.target = '_blank'; a.rel = 'noopener sponsored nofollow';
@@ -61,8 +62,8 @@
     st.innerHTML = '';
     st.appendChild(el('b', null, es ? 'Precios vistos recientemente, no precios garantizados.' : 'Recently seen prices, not guaranteed prices.'));
     st.appendChild(document.createTextNode(' ' + (es
-      ? 'Mostramos solo tarifas que otros viajeros encontraron en Aviasales en las últimas 6 horas. Los boletos baratos se agotan rápido y el precio de hoy puede ser mucho más alto: toque «Ver precio de hoy» para buscar en vivo. Precio por 1 adulto, ida y vuelta, en clase económica (precios actualizados por última vez: ' + upd + '). Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
-      : "We only show fares other travelers found on Aviasales in the last 6 hours. Cheap seats sell out fast and today's price can be much higher: tap \u201cCheck today's price\u201d to search live. Price per 1 adult, round trip, economy (prices last updated: " + upd + '). Links are affiliate links: we may earn a commission at no extra cost to you.')));
+      ? 'Mostramos solo tarifas que otros viajeros encontraron en Aviasales en las últimas 6 horas. Los boletos baratos se agotan rápido y el precio de hoy puede ser mucho más alto: toque «Ver precio de hoy» para buscar en vivo. Precio por 1 adulto, ida y vuelta, en clase económica, en dólares; la fuente no confirma si incluye todos los impuestos y cargos (precios actualizados por última vez: ' + upd + '). Los enlaces son de afiliado: podemos ganar una comisión sin costo extra para usted.'
+      : "We only show fares other travelers found on Aviasales in the last 6 hours. Cheap seats sell out fast and today's price can be much higher: tap \u201cCheck today's price\u201d to search live. Price per 1 adult, round trip, economy, in US dollars; the source doesn\u2019t confirm whether all taxes and fees are included (prices last updated: " + upd + '). Links are affiliate links: we may earn a commission at no extra cost to you.')));
     if (!shown) st.appendChild(el('div', 'small', es ? 'Ahora mismo no hay tarifas de las últimas 6 horas.' : 'No fares from the last 6 hours right now.'));
   }).catch(function () {});
 })();

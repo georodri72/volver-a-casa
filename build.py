@@ -21,7 +21,42 @@ SRC = {
  "cbp": ("CBP – Prohibited and Restricted Items", "https://www.cbp.gov/travel/us-citizens/know-before-you-go/prohibited-and-restricted-items"),
  "cdc": ("CDC – Travelers' Health: El Salvador", "https://wwwnc.cdc.gov/travel/destinations/traveler/none/el-salvador"),
  "step": ("Smart Traveler Enrollment Program (STEP)", "https://step.state.gov/"),
+ "dulles": ("Washington Dulles (MWAA) – Nonstop destinations", "https://www.flydulles.com/nonstop-destinations"),
+ "reagan": ("Reagan National (MWAA) – Nonstop destinations", "https://www.flyreagan.com/nonstop-destinations"),
+ "csj": ("Código de Trabajo de El Salvador, Art. 190 (Corte Suprema de Justicia)", "https://www.csj.gob.sv/wp-content/uploads/2021/06/11-Co%CC%81digo-de-Trabajo-de-El-Salvador-Di%CC%81as-de-asueto.pdf"),
+ "expedia": ("Expedia – 2026 Air Hacks report", "https://www.expedia.com/newsroom/expedia-2026-air-hacks/"),
+ "tpdocs": ("Travelpayouts – Aviasales Data API documentation", "https://support.travelpayouts.com/hc/en-us/articles/203956163-Aviasales-Data-API"),
+ "avsfaq": ("Aviasales – How our service works", "https://www.aviasales.com/faq/how-our-service-works"),
 }
+# Official baggage pages for airlines that appear in our DC-SAL fare data (code -> name, url).
+BAGGAGE = {
+ "AV": ("Avianca", "https://www.avianca.com/es/informacion-y-ayuda/equipaje/"),
+ "UA": ("United", "https://www.united.com/en/us/fly/baggage/checked-bags.html"),
+ "AA": ("American", "https://www.aa.com/web/i18n/travel-info/baggage/checked-baggage-policy.html"),
+ "CM": ("Copa", "https://www.copaair.com/en-us/travel-information/baggage-information/checked-baggage/"),
+ "F9": ("Frontier", "https://www.flyfrontier.com/travel/travel-info/bag-options/"),
+}
+MON_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+MON_ES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+MONTH_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+MONTH_ES = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+def fdate(iso, es, year=False):
+    y, m, d = int(iso[:4]), int(iso[5:7]), int(iso[8:10])
+    return (f"{d} {MON_ES[m-1]}" if es else f"{MON_EN[m-1]} {d}") + (f" {y}" if year and es else (f", {y}" if year else ""))
+def load_json(rel, default):
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), rel)) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return default
+def load_history():
+    rows = []
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "history.jsonl")) as f:
+            rows = [json.loads(l) for l in f if l.strip()]
+    except (OSError, ValueError):
+        pass
+    return rows
 
 def cite(*keys, lang="en"):
     label = "Fuente" if lang == "es" else "Source"
@@ -80,14 +115,14 @@ T = {
  "en": {
   "lang": "en", "other": "es", "other_label": "Español", "prefix": "",
   "site": "Volver a Casa", "tag": "Travel guide &amp; fare tracker for Salvadorans flying home to El Salvador (SAL)",
-  "nav": [("index.html", "Fares"), ("entry.html", "Entry rules"), ("airport.html", "SAL airport"), ("bring.html", "What to bring"), ("tips.html", "Safety &amp; tips"), ("prices.html", "How prices work")],
+  "nav": [("index.html", "Fares"), ("entry.html", "Entry rules"), ("airport.html", "SAL airport"), ("bring.html", "What to bring"), ("tips.html", "Safety &amp; tips"), ("calendar.html", "Cheapest dates"), ("buying.html", "Buying tickets"), ("prices.html", "How prices work")],
   "disclaimer": f"Guide information checked {CHECKED} against the official sources linked on each page. Rules change: always confirm with the source and your airline before you travel. This site is independent and not affiliated with any government or airline.",
   "foot_links": [("prices.html", "How our prices work"), ("credits.html", "Photo credits")],
  },
  "es": {
   "lang": "es", "other": "en", "other_label": "English", "prefix": "es/",
   "site": "Volver a Casa", "tag": "Guía de viaje y rastreador de tarifas para salvadoreños que vuelan a casa (SAL)",
-  "nav": [("index.html", "Tarifas"), ("entry.html", "Requisitos de ingreso"), ("airport.html", "Aeropuerto SAL"), ("bring.html", "Qué llevar"), ("tips.html", "Seguridad y consejos"), ("prices.html", "Cómo funcionan los precios")],
+  "nav": [("index.html", "Tarifas"), ("entry.html", "Requisitos de ingreso"), ("airport.html", "Aeropuerto SAL"), ("bring.html", "Qué llevar"), ("tips.html", "Seguridad y consejos"), ("calendar.html", "Fechas baratas"), ("buying.html", "Comprar boletos"), ("prices.html", "Cómo funcionan los precios")],
   "disclaimer": f"Información de la guía verificada el {CHECKED} con las fuentes oficiales enlazadas en cada página. Las reglas cambian: confirme siempre con la fuente y con su aerolínea antes de viajar. Este sitio es independiente y no está afiliado a ningún gobierno ni aerolínea.",
   "foot_links": [("prices.html", "Cómo funcionan nuestros precios"), ("credits.html", "Créditos de fotos")],
  },
@@ -224,6 +259,7 @@ def build():
  </div>
  <div id="fares-list" class="metros">{groups}</div>
  {foot_note}
+ <p class="sub"><a href="calendar.html">{"Ver los precios más bajos vistos por fecha y por mes →" if es else "See the cheapest seen prices by date and month →"}</a></p>
 </section>
 
 <section class="band">
@@ -262,10 +298,14 @@ def build():
 <p>Mostramos una tarifa solo si podemos confirmar que alguien la vio en las <b>últimas 6 horas</b> y si el vuelo sale en más de 48 horas. Usamos una ventana corta porque las tarifas baratas suelen agotarse en pocas horas: un precio visto hace un día puede ya no existir. Si no hay una tarifa así para un aeropuerto, verá «Sin tarifas recientes». Revisamos los datos cada hora, y la página vuelve a revisar la antigüedad cada vez que la abre.</p>
 <h2>Los precios no están garantizados</h2>
 <p>Los boletos baratos se agotan rápido. El precio de hoy puede ser mucho más alto que el visto recientemente. Por eso mostramos «Precio cuando se vio» y el botón dice «Ver precio de hoy»: abre una búsqueda en vivo en Aviasales. Los precios son por 1 adulto, ida y vuelta, en clase económica, en dólares.</p>
+<h2>Impuestos y cargos</h2>
+<p>La documentación de la API de Travelpayouts no indica si estos precios incluyen todos los impuestos y cargos, así que no lo prometemos. El equipaje puede costar aparte según la tarifa. El total final aparece en el sitio del vendedor antes de pagar. {c('tpdocs','avsfaq')}</p>
+<h2>Calendario de fechas baratas</h2>
+<p>La página <a href="calendar.html">Fechas baratas</a> usa la misma fuente, pero muestra el precio más bajo visto por fecha de salida en los últimos 7 días (el tiempo que la API guarda los datos). Cada precio muestra la fecha en que se vio. Son más antiguos que las tarifas de 6 horas de la página principal: úselos para comparar fechas. También guardamos una captura diaria para mostrar, cuando haya suficiente historial, qué meses han sido más baratos.</p>
 <h2>Enlaces de afiliado</h2>
 <p>Los botones son enlaces de afiliado de Travelpayouts/Aviasales. Si compra después de hacer clic, podemos ganar una comisión <b>sin costo extra para usted</b>. Esto no cambia qué tarifas mostramos.</p>
 <h2>Nunca inventamos precios</h2>
-<p>Cada número en el rastreador viene de la API. No usamos precios de ejemplo, estimados ni promedios. Si no hay datos recientes, lo decimos.</p>
+<p>Cada precio de vuelo en el sitio viene de la API. No usamos precios de ejemplo ni estimados. La única cifra calculada será la mediana de precios vistos en la sección de historial, y estará identificada como tal. Si no hay datos recientes, lo decimos.</p>
 """
         else:
             prices = f"""
@@ -277,13 +317,180 @@ def build():
 <p>We show a fare only if we can confirm someone saw it in the <b>last 6 hours</b> and the flight leaves more than 48 hours from now. We use a short window because cheap fares often sell out within hours: a price seen a day ago may already be gone. If an airport has no such fare, you'll see "No recent fares". We check for new data every hour, and the page re-checks each fare's age every time you open it.</p>
 <h2>Prices are not guaranteed</h2>
 <p>Cheap seats sell out fast. Today's price can be much higher than the recently seen one. That's why we label it "Price when seen" and the button says "Check today's price": it opens a live search on Aviasales. Prices are per 1 adult, round trip, economy, in US dollars.</p>
+<h2>Taxes and fees</h2>
+<p>Travelpayouts' API documentation doesn't say whether these prices include all taxes and fees, so we don't promise that they do. Bags may cost extra depending on the fare. The final total is shown on the seller's site before you pay. {c('tpdocs','avsfaq')}</p>
+<h2>Cheapest-dates calendar</h2>
+<p>The <a href="calendar.html">Cheapest dates</a> page uses the same source but shows the cheapest price seen per departure date over the last 7 days (how long the API keeps data). Each price shows the date it was seen. They are older than the 6-hour fares on the home page: use them to compare dates. We also save one daily snapshot so that, once there is enough history, we can show which months have been cheapest.</p>
 <h2>Affiliate links</h2>
 <p>The buttons are Travelpayouts/Aviasales affiliate links. If you book after clicking, we may earn a commission <b>at no extra cost to you</b>. It doesn't change which fares we show.</p>
 <h2>We never invent prices</h2>
-<p>Every number in the tracker comes from the API. We don't use sample prices, estimates or averages. If there's no recent data, we say so.</p>
+<p>Every flight price on this site comes from the API. We don't use sample or estimated prices. The only calculated figure will be the median of seen prices in the history section, labeled as such. If there's no recent data, we say so.</p>
 """
         pages[(lang, "prices.html")] = ("Cómo funcionan nuestros precios" if es else "How our prices work", prices, None,
                                         "Transparencia sobre las tarifas que mostramos." if es else "Plain answers about the fares we show.")
+
+        # ---------- MONTH VIEW (calendar.html) ----------
+        cal = load_json("public/data/calendar.json", None)
+        hist = load_history()
+        tax_note = ("La documentación de Travelpayouts no indica si estos precios incluyen todos los impuestos y cargos; el total final (impuestos, cargos y equipaje) aparece en el sitio del vendedor." if es else
+                    "Travelpayouts' documentation does not say whether these prices include all taxes and fees; the final total (taxes, fees and bags) is shown on the seller's site.")
+        import calendar as _calmod
+        if not cal or not cal.get("days"):
+            calbody = f'<div class="notice"><b>{"Sin tarifas recientes." if es else "No recent fares."}</b> {"Todavía no tenemos datos del calendario." if es else "We don't have calendar data yet."}</div>'
+        else:
+            days = cal["days"]
+            seen = sorted(d["seen_date"] for d in days)
+            gen = cal["generated_at"][:16].replace("T", " ")
+            chk = "Ver precio de hoy" if es else "Check today's price"
+            stops = lambda n: ("" if n is None else (("directo" if es else "nonstop") if n == 0 else f'{n} {"escala" if es else "stop"}{"" if n == 1 else ("s" if True else "")}'))
+            summary = ""
+            for m in cal["months"]:
+                y, mo = int(m["month"][:4]), int(m["month"][5:7])
+                mname = (f"{MONTH_ES[mo-1]} {y}" if es else f"{MONTH_EN[mo-1]} {y}")
+                if m["min"] is None:
+                    summary += f'<li class="mrow none"><span class="mname">{mname}</span><span class="muted">{"Sin tarifas recientes" if es else "No recent fares"}</span></li>'
+                else:
+                    summary += (f'<li class="mrow"><a href="#m-{m["month"]}"><span class="mname">{mname}</span>'
+                                f'<span class="mprice">{"Desde" if es else "From"} ${m["min"]:,}</span>'
+                                f'<span class="small">{m["min_origin"]} · {"sale" if es else "departs"} {fdate(m["min_depart_date"], es)} · {"visto el" if es else "seen"} {fdate(m["min_seen_date"], es)} · {m["days_with_data"]} {"días con datos" if es else ("day with data" if m["days_with_data"] == 1 else "days with data")}</span></a></li>')
+            grids = ""
+            dows = ["L", "M", "M", "J", "V", "S", "D"] if es else ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+            for m in cal["months"]:
+                if m["min"] is None: continue
+                y, mo = int(m["month"][:4]), int(m["month"][5:7])
+                mname = (f"{MONTH_ES[mo-1]} {y}" if es else f"{MONTH_EN[mo-1]} {y}")
+                md = [d for d in days if d["depart_date"].startswith(m["month"])]
+                best = {}
+                for d in md:
+                    if d["depart_date"] not in best or d["price"] < best[d["depart_date"]]["price"]:
+                        best[d["depart_date"]] = d
+                cells = "".join(f'<span class="dow" aria-hidden="true">{w}</span>' for w in dows)
+                first_wd, ndays = _calmod.monthrange(y, mo)
+                cells += '<span class="cell pad" aria-hidden="true"></span>' * first_wd
+                for dd in range(1, ndays + 1):
+                    iso = f"{m['month']}-{dd:02d}"
+                    f = best.get(iso)
+                    if f:
+                        lab = (f'{"Sale" if es else "Depart"} {fdate(iso, es)}, {"regresa" if es else "return"} {fdate(f["return_date"], es)}, {f["origin"]}: '
+                               f'{"precio cuando se vio" if es else "price when seen"} ${f["price"]:,}, {"visto el" if es else "seen"} {fdate(f["seen_date"], es, True)}')
+                        cells += (f'<a class="cell has" data-dep="{iso}" data-seen="{f["seen_date"]}" href="{html.escape(f["link"])}" rel="sponsored noopener" target="_blank" aria-label="{html.escape(lab)}" title="{html.escape(lab)}">'
+                                  f'<span class="dn">{dd}</span><span class="dp">${f["price"]:,}</span><span class="do">{f["origin"]}</span></a>')
+                    else:
+                        cells += f'<span class="cell"><span class="dn">{dd}</span></span>'
+                rows = "".join(
+                    f'<li data-dep="{d["depart_date"]}" data-seen="{d["seen_date"]}"><b>${d["price"]:,}</b> · {d["origin"]} → SAL · {fdate(d["depart_date"], es)} – {fdate(d["return_date"], es)}'
+                    f'{" · " + stops(d["transfers"]) + (" ida" if es else " out") if d.get("transfers") is not None else ""}{" · " + d["airline"] if d.get("airline") else ""}'
+                    f' · {"visto el" if es else "seen"} {fdate(d["seen_date"], es)} · <a href="{html.escape(d["link"])}" rel="sponsored noopener" target="_blank">{chk}</a></li>'
+                    for d in sorted(md, key=lambda x: (x["depart_date"], x["price"])))
+                grids += (f'<section class="month" id="m-{m["month"]}"><h3>{mname} <span class="small">· {"desde" if es else "from"} ${m["min"]:,}</span></h3>'
+                          f'<div class="cal" role="group" aria-label="{mname}">{cells}</div>'
+                          f'<details><summary>{"Todas las tarifas de este mes" if es else "All fares this month"} ({len(md)})</summary><ul class="flist">{rows}</ul></details></section>')
+            # When is it cheapest: needs enough daily snapshots
+            snaps = len(hist)
+            NEED = 28
+            if snaps >= NEED:
+                import statistics
+                acc = {}
+                for h in hist:
+                    for mm, v in h.get("by_month", {}).items():
+                        acc.setdefault(mm, []).append(v["min"])
+                trs = "".join(f'<tr><td>{(MONTH_ES if es else MONTH_EN)[int(mm[5:7])-1]} {mm[:4]}</td><td>${statistics.median(v):,.0f}</td><td>{len(v)}</td></tr>' for mm, v in sorted(acc.items()))
+                when = (f'<p>{"Mediana del precio más bajo visto cada día, por mes de salida, a partir de" if es else "Median of the cheapest price seen each day, by departure month, from"} {snaps} {"capturas diarias" if es else "daily snapshots"} ({fdate(hist[0]["date"], es, True)} – {fdate(hist[-1]["date"], es, True)}). {"Es historial de precios vistos, no una predicción." if es else "This is a history of seen prices, not a prediction."}</p>'
+                        f'<table class="hist"><thead><tr><th>{"Mes de salida" if es else "Departure month"}</th><th>{"Mediana" if es else "Median"}</th><th>{"Días" if es else "Days"}</th></tr></thead><tbody>{trs}</tbody></table>')
+            else:
+                start = fdate(hist[0]["date"], es, True) if hist else ""
+                when = (f'<p>{"Estamos guardando una captura diaria de estos precios" if es else "We are saving one daily snapshot of these prices"}{(" desde el " if es else " since ") + start if start else ""} ({snaps} {"hasta ahora" if es else "so far"}). '
+                        f'{"Cuando tengamos al menos" if es else "Once we have at least"} {NEED} {"días de historial, mostraremos aquí qué meses han sido más baratos. Hasta entonces no hacemos afirmaciones sobre tendencias." if es else "days of history, we will show here which months have been cheapest. Until then we make no claims about trends."}</p>')
+            calbody = f"""
+<div class="notice" role="note"><b>{"Precios más bajos vistos en búsquedas recientes; pueden haber cambiado." if es else "Cheapest prices seen in recent searches; they may have changed."}</b>
+{"Cada precio muestra la fecha en que alguien lo vio en Aviasales (hasta 7 días atrás). Son más antiguos que las tarifas de 6 horas de la página principal, así que úselos para comparar fechas, no como precio de compra." if es else "Each price shows the date someone saw it on Aviasales (up to 7 days ago). They are older than the 6-hour fares on the home page, so use them to compare dates, not as a price you can book."}
+{"1 adulto, ida y vuelta, económica, en dólares, desde" if es else "1 adult, round trip, economy, in US dollars, from"} {codes_txt}. {tax_note}</div>
+<p class="small">{"Precios vistos entre el" if es else "Prices seen between"} {fdate(seen[0], es, True)} {"y el" if es else "and"} {fdate(seen[-1], es, True)}. {"Datos actualizados" if es else "Data updated"} {gen} UTC. {"Fuente" if es else "Source"}: Aviasales (Travelpayouts Data API). <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
+<h2>{"El más barato por mes" if es else "Cheapest by month"}</h2>
+<ul class="months">{summary}</ul>
+<p class="small">{"Pocos días con datos significa que pocas personas buscaron esas fechas; no quiere decir que no haya vuelos." if es else "Few days with data means few people searched those dates; it doesn't mean there are no flights."}</p>
+<h2>{"Calendario por fecha de salida" if es else "Calendar by departure date"}</h2>
+<p class="small">{"Cada día muestra el precio más bajo visto (DCA o IAD) y abre esa búsqueda en Aviasales." if es else "Each day shows the cheapest seen price (DCA or IAD) and opens that search on Aviasales."}</p>
+{grids}
+<h2 id="cheapest">{"¿Cuándo es más barato volar?" if es else "When is it cheapest to fly?"}</h2>
+{when}
+<script>(function(){{var now=Date.now(),max={cal.get("max_seen_days", 7)}*864e5+864e5,lead=2*864e5;document.querySelectorAll('[data-seen]').forEach(function(e){{var s=Date.parse(e.getAttribute('data-seen')+'T00:00:00Z'),d=Date.parse(e.getAttribute('data-dep')+'T00:00:00Z');if(now-s>max||d-now<lead){{if(e.tagName==='A'){{var n=document.createElement('span');n.className='cell';n.innerHTML='<span class="dn">'+e.querySelector('.dn').textContent+'</span>';e.replaceWith(n);}}else e.remove();}}}});}})();</script>
+"""
+        pages[(lang, "calendar.html")] = ("Fechas más baratas" if es else "Cheapest dates", calbody, None,
+                                          (f"Precios más bajos vistos por fecha de salida desde {codes_txt}, próximos 12 meses." if es else f"Cheapest seen prices by departure date from {codes_txt}, next 12 months."))
+
+        # ---------- BUYING TICKETS (buying.html) ----------
+        seen_air = []
+        for d in ((cal or {}).get("days") or []):
+            if d.get("airline") in BAGGAGE and d["airline"] not in seen_air:
+                seen_air.append(d["airline"])
+        bag_links = ", ".join(f'<a href="{BAGGAGE[a][1]}" rel="noopener" target="_blank">{BAGGAGE[a][0]}</a>' for a in sorted(seen_air or BAGGAGE, key=lambda a: BAGGAGE[a][0]))
+        if es:
+            buying = f"""
+<h2>Qué aerolíneas vuelan de Washington DC a San Salvador</h2>
+{ul([
+ f"El aeropuerto de Dulles (IAD) lista San Salvador como destino <b>sin escalas, todo el año</b>. {c('dulles')}",
+ f"El tablero oficial del aeropuerto de El Salvador mostró vuelos de <b>Avianca</b> hacia Washington cuando lo revisamos (18 oct 2026). El tablero muestra solo los vuelos del día. {c('fids')}",
+ f"Para Reagan National (DCA), revise la lista de destinos sin escala del aeropuerto. {c('reagan')}",
+ "Aerolíneas que aparecen en las tarifas DC–SAL que vimos recientemente (pueden incluir conexiones): " + (", ".join(BAGGAGE[a][0] for a in sorted(seen_air, key=lambda a: BAGGAGE[a][0])) or "—") + ". Fuente: datos de Aviasales en esta página.",
+ "Otras aerolíneas pueden volar la ruta por temporada. Confirme siempre en el sitio de la aerolínea.",
+])}
+<h2>Equipaje</h2>
+<p>Las reglas y cargos de equipaje cambian según la aerolínea, la tarifa y la fecha de compra, por eso no copiamos montos aquí. Revise la página oficial de su aerolínea: {bag_links}.</p>
+<p>En Aviasales, si una tarifa no muestra opción de equipaje, el vendedor dio una tarifa sin equipaje y puede agregarlo al reservar en el sitio del vendedor. {c('avsfaq')}</p>
+<h2>Fechas para planear (feriados en El Salvador)</h2>
+{ul([
+ f"El artículo 190 del Código de Trabajo establece como asuetos: 1 de enero; jueves, viernes y sábado de Semana Santa; 1 de mayo; 6 de agosto; 15 de septiembre; 2 de noviembre; 25 de diciembre. En la ciudad de San Salvador también el 3 y 5 de agosto (fiestas agostinas). Puede haber otros asuetos por decretos posteriores. {c('csj')}",
+ "Semana Santa 2027: jueves 25, viernes 26 y sábado 27 de marzo de 2027 (Domingo de Pascua: 28 de marzo).",
+ "Todavía no tenemos suficiente historial para decir si las tarifas suben en estas fechas. Vea <a href='calendar.html'>Fechas baratas</a> para precios vistos por fecha.",
+])}
+<h2>Cuándo comprar</h2>
+{ul([
+ f"Según el informe 2026 Air Hacks de Expedia (promedios de todos los vuelos internacionales en económica comprados desde EE. UU., no específico de El Salvador), comprar 31–45 días antes ahorró en promedio $190 frente a comprar con 6 meses o más, y 8–15 días antes ahorró en promedio $225. {c('expedia')}",
+ "Las tarifas baratas se agotan rápido: si encuentra un precio que le sirve, compare el total final en el sitio del vendedor antes de decidir.",
+])}
+<h2>Requisitos de ingreso</h2>
+<p>Pasaporte, DUI, menores y efectivo: vea <a href="entry.html">Requisitos de ingreso</a>, con fuentes oficiales.</p>
+<h2>Al comprar</h2>
+{ul([
+ f"Aviasales no vende boletos: lo envía al sitio del vendedor (aerolínea o agencia), donde paga y ve el total final. {c('avsfaq')}",
+ "Compare el total final en el sitio del vendedor, no el precio que vio aquí ni en la lista de resultados.",
+])}
+"""
+        else:
+            buying = f"""
+<h2>Which airlines fly Washington DC to San Salvador</h2>
+{ul([
+ f"Washington Dulles (IAD) lists San Salvador as a <b>year-round nonstop</b> destination. {c('dulles')}",
+ f"El Salvador airport's official flight board showed <b>Avianca</b> flights to Washington when we checked (Oct 18, 2026). The board only shows that day's flights. {c('fids')}",
+ f"For Reagan National (DCA), check the airport's nonstop destination list. {c('reagan')}",
+ "Airlines that appear in DC–SAL fares we saw recently (may include connections): " + (", ".join(BAGGAGE[a][0] for a in sorted(seen_air, key=lambda a: BAGGAGE[a][0])) or "—") + ". Source: the Aviasales data on this site.",
+ "Other airlines may fly the route seasonally. Always confirm on the airline's website.",
+])}
+<h2>Baggage</h2>
+<p>Bag rules and fees depend on the airline, fare type and purchase date, so we don't copy amounts here. Check your airline's official page: {bag_links}.</p>
+<p>On Aviasales, if a fare shows no baggage option, the seller supplied a no-bag fare and you can add bags when booking on the seller's site. {c('avsfaq')}</p>
+<h2>Dates to plan around (holidays in El Salvador)</h2>
+{ul([
+ f"Article 190 of the Labor Code lists these paid holidays: January 1; Holy Thursday, Friday and Saturday; May 1; August 6; September 15; November 2; December 25. In the city of San Salvador also August 3 and 5 (fiestas agostinas). Later decrees may add other holidays. {c('csj')}",
+ "Holy Week 2027: Thursday March 25, Friday March 26 and Saturday March 27, 2027 (Easter Sunday: March 28).",
+ "We don't have enough history yet to say whether fares rise around these dates. See <a href='calendar.html'>Cheapest dates</a> for seen prices by date.",
+])}
+<h2>When to book</h2>
+{ul([
+ f"According to Expedia's 2026 Air Hacks report (averages across all international economy flights booked from the U.S., not specific to El Salvador), booking 31–45 days ahead saved $190 on average versus booking 6+ months out, and booking 8–15 days ahead saved $225 on average. {c('expedia')}",
+ "Cheap fares sell out fast: if you find a price that works, compare the final total on the seller's site before you decide.",
+])}
+<h2>Entry rules</h2>
+<p>Passport, DUI, minors and cash: see <a href="entry.html">Entry rules</a>, with official sources.</p>
+<h2>When you book</h2>
+{ul([
+ f"Aviasales doesn't sell tickets: it sends you to the seller's site (airline or agency), where you pay and see the final total. {c('avsfaq')}",
+ "Compare the final total on the seller's site, not the price you saw here or in the results list.",
+])}
+"""
+        pages[(lang, "buying.html")] = ("Comprar boletos a El Salvador" if es else "Buying tickets to El Salvador", buying, None,
+                                        "Aerolíneas, equipaje, feriados y consejos para comprar, con fuentes." if es else "Airlines, baggage, holidays and booking advice, with sources.")
 
         # ---------- CREDITS ----------
         rows = "".join(
@@ -310,10 +517,10 @@ def build():
 {ul([
  f"No se requiere visa para estancias de 90 días o menos. El pasaporte debe estar vigente al momento de entrar. {c('state')}",
  f"Acuerdo CA-4: al entrar legalmente a El Salvador, Guatemala, Honduras o Nicaragua puede moverse entre ellos hasta 90 días en total. {c('state')}",
- f"<b>Tarjeta de turista de $12:</b> las fuentes no coinciden. La página de la Embajada de EE. UU. aún la menciona, pero la prensa salvadoreña informó que la Asamblea Legislativa eliminó la Tarjeta Migratoria de Ingreso. Confirme con Migración antes de viajar. {c('embassy','tim')}",
+ f"<b>Tarjeta de turista de $12:</b> las fuentes no coinciden. La página de la Embajada de EE. UU. aún la menciona (revisado el 18 oct 2026), pero Diario El Salvador informó el 1 de mayo de 2025 que la Asamblea Legislativa eliminó el cobro de $12 de la Tarjeta Migratoria de Ingreso. Confirme con Migración antes de viajar. {c('embassy','tim')}",
 ])}
 <h2>Efectivo</h2>
-<p>El Departamento de Estado indica un máximo de <b>$10,000</b> de entrada y salida; la página de la Embajada menciona $15,000. Si lleva mucho efectivo, confirme el límite vigente. El dólar estadounidense es la moneda oficial. {c('state','embassy')}</p>
+<p>El Departamento de Estado indica un máximo de <b>$10,000</b> (USD) de entrada y salida; la página de la Embajada menciona $15,000 (USD). Ambas páginas revisadas el 18 oct 2026. Si lleva mucho efectivo, confirme el límite vigente. El dólar estadounidense es la moneda oficial. {c('state','embassy')}</p>
 <h2>Viajando con niños</h2>
 {ul([
  f"Lleve copia del acta de nacimiento de cada menor o prueba de su relación legal. {c('state')}",
@@ -335,10 +542,10 @@ def build():
 {ul([
  f"No visa is required for stays of 90 days or less. Your passport must be valid at the time of entry. {c('state')}",
  f"CA-4 agreement: after legally entering El Salvador, Guatemala, Honduras or Nicaragua you can travel among them for up to 90 days total. {c('state')}",
- f"<b>$12 tourist card:</b> sources disagree. The U.S. Embassy page still mentions it, but Salvadoran press reported the Legislative Assembly eliminated the entry card (Tarjeta Migratoria de Ingreso). Confirm with immigration before you travel. {c('embassy','tim')}",
+ f"<b>$12 tourist card:</b> sources disagree. The U.S. Embassy page still lists it (checked Oct 18, 2026), but Diario El Salvador reported on May 1, 2025 that the Legislative Assembly eliminated the $12 entry card fee (Tarjeta Migratoria de Ingreso). Confirm with immigration before you travel. {c('embassy','tim')}",
 ])}
 <h2>Cash</h2>
-<p>The State Department lists a <b>$10,000</b> maximum on entry and exit; the Embassy page says $15,000. If you carry a lot of cash, confirm the current limit. The U.S. dollar is El Salvador's official currency. {c('state','embassy')}</p>
+<p>The State Department lists a <b>$10,000</b> (USD) maximum on entry and exit; the Embassy page says $15,000 (USD). Both pages checked Oct 18, 2026. If you carry a lot of cash, confirm the current limit. The U.S. dollar is El Salvador's official currency. {c('state','embassy')}</p>
 <h2>Traveling with children</h2>
 {ul([
  f"Bring a copy of each child's birth certificate or other proof of your legal relationship. {c('state')}",
@@ -356,7 +563,7 @@ def build():
 {ul([
  f"Opera <b>las 24 horas, los 7 días</b>. Teléfono CEPA: (503) 2537-1300. {c('cepa')}",
  f"Llegadas y salidas en tiempo real: tablero oficial de vuelos. {c('fids')}",
- f"Estacionamiento general: $2.00 por hora o fracción, máximo $6.00 por día. Estacionamiento VIP: $12.00 por día o fracción. Carretilla para equipaje: $3.00. {c('vip')}",
+ f"Estacionamiento general: $2.00 por hora o fracción, máximo $6.00 por día. Estacionamiento VIP: $12.00 por día o fracción. Carretilla para equipaje: $3.00. Tarifas en dólares según la página de CEPA en SIMPLE SV, revisada el 18 oct 2026; pueden cambiar. {c('vip')}",
  f"Servicio VIP (edecanes, trámite migratorio y aduana, retiro de equipaje) se solicita en línea; horario 6:15 a.m. a 9:15 p.m. Consulte el precio vigente en el trámite. {c('vip')}",
  f"Objetos perdidos: WhatsApp +503 7070-8312. Quejas contra aerolíneas (boleto, vuelo, equipaje): enlinea.defensoria.gob.sv/Viajero o teléfono 910. {c('cepafaq')}",
  f"Los empleados del gobierno de EE. UU. pueden viajar a cualquier hora entre San Salvador y el aeropuerto (excepción a su restricción nocturna). {c('state')}",
@@ -370,7 +577,7 @@ def build():
 {ul([
  f"Open <b>24 hours a day, 7 days a week</b>. CEPA phone: (503) 2537-1300. {c('cepa')}",
  f"Live arrivals and departures: the official flight board. {c('fids')}",
- f"General parking: $2.00 per hour or fraction, max $6.00 per day. VIP parking: $12.00 per day or fraction. Luggage cart: $3.00. {c('vip')}",
+ f"General parking: $2.00 per hour or fraction, max $6.00 per day. VIP parking: $12.00 per day or fraction. Luggage cart: $3.00. Fees in US dollars as listed on CEPA's SIMPLE SV page, checked Oct 18, 2026; they may change. {c('vip')}",
  f"VIP service (escort, immigration and customs processing, baggage pickup) is booked online; hours 6:15 a.m. to 9:15 p.m. Check the current price on the booking page. {c('vip')}",
  f"Lost and found: WhatsApp +503 7070-8312. Airline complaints (ticket, flight, baggage): enlinea.defensoria.gob.sv/Viajero or phone 910. {c('cepafaq')}",
  f"U.S. government employees may travel at any hour between San Salvador and the airport (an exception to their night-travel restriction). {c('state')}",

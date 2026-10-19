@@ -87,3 +87,23 @@ footer.site a{color:#fff}.brandline{color:#fff;font-weight:700;margin:0 0 8px}
 @media (min-width:600px){.chips{flex-wrap:wrap;overflow:visible}.fcards{grid-template-columns:repeat(2,1fr)}.tiles{grid-template-columns:repeat(2,1fr)}.hero{min-height:500px}}
 @media (min-width:900px){.fcards{grid-template-columns:repeat(3,1fr)}.tiles{grid-template-columns:repeat(4,1fr)}.hero{min-height:560px}.nav{padding-bottom:10px}}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.tile{transition:none}}
+/* month view */
+.months{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px}
+.mrow a,.mrow.none{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink)}
+.mrow a:hover{border-color:var(--blue);background:var(--soft)}
+.mrow .small{grid-column:1/-1;color:var(--muted)}
+.mname{font-weight:650;text-transform:capitalize}.mprice{font-weight:750;color:var(--blue)}
+.mrow.none{color:var(--muted)}
+.month{margin:22px 0}.month h3{text-transform:capitalize;margin:0 0 8px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dow{font-size:.72rem;color:var(--muted);text-align:center;font-weight:600}
+.cell{min-height:52px;border-radius:8px;background:var(--soft);padding:3px 4px;display:flex;flex-direction:column;font-size:.72rem;line-height:1.25;color:var(--muted);text-decoration:none}
+.cell.pad{background:none}
+.cell.has{background:var(--blue-l);color:var(--ink);border:1px solid #c7d6f0}
+.cell.has:hover{background:var(--blue);color:#fff}
+.cell .dp{font-weight:750;font-size:.8rem;color:inherit}.cell.has .dp{color:var(--blue-d)}.cell.has:hover .dp{color:#fff}
+.cell .do{font-size:.62rem;opacity:.8}
+.flist{font-size:.9rem;padding-left:18px}.flist li{margin:4px 0}
+details summary{cursor:pointer;color:var(--blue);font-weight:600;margin-top:8px}
+table.hist{border-collapse:collapse;width:100%;font-size:.95rem}table.hist th,table.hist td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left}
+@media (min-width:700px){.months{grid-template-columns:1fr 1fr}.cell{min-height:64px;font-size:.8rem;padding:5px 7px}.cell .dp{font-size:.9rem}.cell .do{font-size:.7rem}}
