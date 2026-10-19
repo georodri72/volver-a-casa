@@ -27,38 +27,82 @@ def cite(*keys, lang="en"):
     links = ", ".join(f'<a href="{SRC[k][1]}" rel="noopener" target="_blank">{html.escape(SRC[k][0])}</a>' for k in keys)
     return f'<span class="cite">{label}: {links}</span>'
 
-# Origin airports serving the top-10 Salvadoran-origin metros (ACS 2024 1-yr, see launch_plan.md)
-AIRPORTS = [
- ("Los Angeles", "LAX"), ("Los Angeles / Inland Empire", "ONT"),
- ("Washington DC / Baltimore", "IAD"),
- ("New York", "JFK"), ("New York / New Jersey", "EWR"),
- ("Houston", "IAH"), ("Houston", "HOU"),
- ("Dallas–Fort Worth", "DFW"),
- ("San Francisco", "SFO"), ("Oakland", "OAK"),
- ("Boston", "BOS"), ("Miami", "MIA"), ("Atlanta", "ATL"),
+# Top-10 Salvadoran-origin metros (ACS 2024 1-yr, B03001) -> airports we query.
+# Must stay in sync with ORIGINS in scripts/refresh_fares.py.
+METROS = [
+ ("la", "Los Angeles", "Los Ángeles", ["LAX"]),
+ ("dc", "Washington DC", "Washington DC", ["IAD", "DCA", "BWI"]),
+ ("ny", "New York", "Nueva York", ["JFK", "EWR"]),
+ ("hou", "Houston", "Houston", ["IAH", "HOU"]),
+ ("dfw", "Dallas–Fort Worth", "Dallas–Fort Worth", ["DFW"]),
+ ("sf", "SF Bay Area", "Área de la Bahía (SF)", ["SFO", "OAK", "SJC"]),
+ ("ie", "Inland Empire", "Inland Empire", ["ONT"]),
+ ("bos", "Boston", "Boston", ["BOS"]),
+ ("mia", "Miami", "Miami", ["MIA", "FLL"]),
+ ("atl", "Atlanta", "Atlanta", ["ATL"]),
 ]
+AIRPORT_NAMES = {
+ "LAX": "Los Angeles Intl", "IAD": "Washington Dulles", "DCA": "Reagan National", "BWI": "Baltimore/Washington",
+ "JFK": "New York JFK", "EWR": "Newark Liberty", "IAH": "Houston Bush", "HOU": "Houston Hobby",
+ "DFW": "Dallas/Fort Worth", "SFO": "San Francisco", "OAK": "Oakland", "SJC": "San José",
+ "ONT": "Ontario", "BOS": "Boston Logan", "MIA": "Miami", "FLL": "Fort Lauderdale", "ATL": "Atlanta",
+}
+
+# Photos: Wikimedia Commons, licenses verified via the Commons API (extmetadata) on 2026-10-18.
+PHOTOS = {
+ "coatepeque": dict(title="Coatepeque Vista.jpg", author="JMRAFFi", license="CC BY 4.0",
+     license_url="https://creativecommons.org/licenses/by/4.0/", src="https://commons.wikimedia.org/wiki/File:Coatepeque_Vista.jpg",
+     en="Lake Coatepeque, Santa Ana", es="Lago de Coatepeque, Santa Ana", sizes=[640, 1024, 1600], ratio=(4, 3)),
+ "santa-ana": dict(title="Laguna cratérica del Volcán de Santa Ana - El Salvador.jpg", author="Erneestoo", license="CC BY-SA 4.0",
+     license_url="https://creativecommons.org/licenses/by-sa/4.0/", src="https://commons.wikimedia.org/wiki/File:Laguna_crat%C3%A9rica_del_Volc%C3%A1n_de_Santa_Ana_-_El_Salvador.jpg",
+     en="Crater lagoon of the Santa Ana Volcano (Ilamatepec)", es="Laguna del cráter del volcán de Santa Ana (Ilamatepec)", sizes=[480, 800], ratio=(4, 3)),
+ "suchitoto": dict(title="Calles de Suchitoto Agosto..JPG", author="ElmerGuevara", license="CC BY-SA 3.0",
+     license_url="https://creativecommons.org/licenses/by-sa/3.0/", src="https://commons.wikimedia.org/wiki/File:Calles_de_Suchitoto_Agosto..JPG",
+     en="Cobblestone street in Suchitoto", es="Calle empedrada en Suchitoto", sizes=[480, 800], ratio=(3, 2)),
+ "playa": dict(title="Playa de El Salvador.jpg", author="Rodrigo var351", license="CC BY-SA 4.0",
+     license_url="https://creativecommons.org/licenses/by-sa/4.0/", src="https://commons.wikimedia.org/wiki/File:Playa_de_El_Salvador.jpg",
+     en="Pacific coast beach, El Salvador", es="Playa en la costa del Pacífico, El Salvador", sizes=[480, 800], ratio=(4, 3)),
+}
+
+def img(key, lang, depth, sizes_attr, cls="", eager=False):
+    p = PHOTOS[key]; w0, h0 = p["ratio"]; big = p["sizes"][-1]
+    srcset = ", ".join(f"{depth}img/{key}-{w}.webp {w}w" for w in p["sizes"])
+    load = 'fetchpriority="high"' if eager else 'loading="lazy" decoding="async"'
+    return (f'<img class="{cls}" src="{depth}img/{key}-{p["sizes"][0]}.webp" srcset="{srcset}" sizes="{sizes_attr}" '
+            f'width="{big}" height="{big*h0//w0}" alt="{html.escape(p[lang])}" {load}>')
 
 T = {
  "en": {
   "lang": "en", "other": "es", "other_label": "Español", "prefix": "",
   "site": "Volver a Casa", "tag": "Travel guide &amp; fare tracker for Salvadorans flying home to El Salvador (SAL)",
-  "nav": [("index.html", "Home &amp; fares"), ("entry.html", "Entry rules"), ("airport.html", "SAL airport"), ("bring.html", "What to bring"), ("tips.html", "Safety &amp; tips")],
-  "disclaimer": f"Information checked {CHECKED} against the official sources linked on each page. Rules change: always confirm with the source and your airline before you travel. This site is independent and not affiliated with any government or airline.",
+  "nav": [("index.html", "Fares"), ("entry.html", "Entry rules"), ("airport.html", "SAL airport"), ("bring.html", "What to bring"), ("tips.html", "Safety &amp; tips"), ("prices.html", "How prices work")],
+  "disclaimer": f"Guide information checked {CHECKED} against the official sources linked on each page. Rules change: always confirm with the source and your airline before you travel. This site is independent and not affiliated with any government or airline.",
+  "foot_links": [("prices.html", "How our prices work"), ("credits.html", "Photo credits")],
  },
  "es": {
   "lang": "es", "other": "en", "other_label": "English", "prefix": "es/",
   "site": "Volver a Casa", "tag": "Guía de viaje y rastreador de tarifas para salvadoreños que vuelan a casa (SAL)",
-  "nav": [("index.html", "Inicio y tarifas"), ("entry.html", "Requisitos de ingreso"), ("airport.html", "Aeropuerto SAL"), ("bring.html", "Qué llevar"), ("tips.html", "Seguridad y consejos")],
-  "disclaimer": f"Información verificada el {CHECKED} con las fuentes oficiales enlazadas en cada página. Las reglas cambian: confirme siempre con la fuente y con su aerolínea antes de viajar. Este sitio es independiente y no está afiliado a ningún gobierno ni aerolínea.",
+  "nav": [("index.html", "Tarifas"), ("entry.html", "Requisitos de ingreso"), ("airport.html", "Aeropuerto SAL"), ("bring.html", "Qué llevar"), ("tips.html", "Seguridad y consejos"), ("prices.html", "Cómo funcionan los precios")],
+  "disclaimer": f"Información de la guía verificada el {CHECKED} con las fuentes oficiales enlazadas en cada página. Las reglas cambian: confirme siempre con la fuente y con su aerolínea antes de viajar. Este sitio es independiente y no está afiliado a ningún gobierno ni aerolínea.",
+  "foot_links": [("prices.html", "Cómo funcionan nuestros precios"), ("credits.html", "Créditos de fotos")],
  },
 }
 
-def page(lang, fname, title, body):
+def page(lang, fname, title, body, hero=None, lead=None):
     t = T[lang]
     depth = "../" if lang == "es" else ""
     other_href = ("../" if lang == "es" else "es/") + fname
-    nav = "".join(f'<a href="{h}"{" class=active" if h==fname else ""}>{l}</a>' for h, l in t["nav"])
-    alt_en = f'/{fname}'; alt_es = f'/es/{fname}'
+    nav = "".join(f'<a href="{h}"{" aria-current=page" if h==fname else ""}>{l}</a>' for h, l in t["nav"])
+    foot = " · ".join(f'<a href="{h}">{l}</a>' for h, l in t["foot_links"])
+    skip = "Saltar al contenido" if lang == "es" else "Skip to content"
+    preload = ""
+    if hero == "home":
+        p = PHOTOS["coatepeque"]
+        preload = (f'<link rel="preload" as="image" type="image/webp" imagesrcset="' +
+                   ", ".join(f"{depth}img/coatepeque-{w}.webp {w}w" for w in p["sizes"]) + '" imagesizes="100vw">')
+    head_block = body if hero == "home" else f'<div class="pagehead"><div class="wrap"><h1>{title}</h1>{f"<p>{lead}</p>" if lead else ""}</div></div><main id="main" class="wrap prose">{body}</main>'
+    if hero == "home":
+        head_block = body
     return f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -66,23 +110,30 @@ def page(lang, fname, title, body):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title} · {t['site']}</title>
 <meta name="description" content="{t['tag']}">
-<link rel="alternate" hreflang="en" href="{alt_en}">
-<link rel="alternate" hreflang="es" href="{alt_es}">
+<meta name="theme-color" content="#0047AB">
+<link rel="alternate" hreflang="en" href="/{fname}">
+<link rel="alternate" hreflang="es" href="/es/{fname}">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230047AB'/%3E%3Crect y='11' width='32' height='10' fill='%23fff'/%3E%3C/svg%3E">
+{preload}
 <link rel="stylesheet" href="{depth}assets/style.css">
 </head>
 <body>
-<header>
- <div class="wrap top">
-  <a class="brand" href="index.html">🇸🇻 {t['site']}</a>
-  <a class="lang" href="{other_href}" hreflang="{t['other']}">{t['other_label']}</a>
+<a class="skip" href="#main">{skip}</a>
+<header class="site">
+ <div class="wrap bar">
+  <a class="brand" href="index.html"><span class="flag" aria-hidden="true"></span>{t['site']}</a>
+  <a class="lang" href="{other_href}" hreflang="{t['other']}" lang="{t['other']}">{t['other_label']}</a>
  </div>
- <div class="wrap"><p class="tag">{t['tag']}</p><nav>{nav}</nav></div>
+ <nav class="wrap nav" aria-label="{'Principal' if lang=='es' else 'Main'}">{nav}</nav>
 </header>
-<main class="wrap">
-<h1>{title}</h1>
-{body}
-</main>
-<footer><div class="wrap"><p>{t['disclaimer']}</p></div></footer>
+{head_block}
+<footer class="site">
+ <div class="wrap">
+  <p class="brandline"><span class="flag" aria-hidden="true"></span>{t['site']}</p>
+  <p>{t['disclaimer']}</p>
+  <p class="foot-links">{foot}</p>
+ </div>
+</footer>
 </body>
 </html>
 """
@@ -94,45 +145,116 @@ def build():
     pages = {}
     for lang in ("en", "es"):
         es = lang == "es"
+        depth = "../" if es else ""
         c = lambda *k: cite(*k, lang=lang)
-        rows = "".join(f'<tr data-code="{code}"><td>{html.escape(city)}</td><td><b>{code}</b> → SAL</td><td class="fare">—</td></tr>' for city, code in AIRPORTS)
         # ---------- HOME ----------
+        chips = "".join(f'<button type="button" class="chip" data-metro="{mid}" aria-pressed="false">{html.escape(ne if not es else ns)}</button>' for mid, ne, ns, _ in METROS)
+        cards = ""
+        for mid, ne, ns, codes in METROS:
+            for code in codes:
+                cards += (f'<li class="fcard" data-code="{code}" data-metro="{mid}"><p class="mlabel">{html.escape(ns if es else ne)}</p>'
+                          f'<div class="fhead"><span class="code">{code}</span><span class="aname">{AIRPORT_NAMES[code]}</span><span class="arrow" aria-hidden="true">→ SAL</span></div>'
+                          f'<div class="fare"><span class="muted">{"Tarifas próximamente" if es else "Fares coming soon"}</span></div></li>')
+        groups = f'<ul class="fcards">{cards}</ul>'
+        guide_tiles = [
+            ("entry.html", "suchitoto", T[lang]["nav"][1][1], "Pasaporte, DUI, menores, efectivo" if es else "Passport, DUI, minors, cash limits"),
+            ("airport.html", "coatepeque", T[lang]["nav"][2][1], "Horario, vuelos, estacionamiento, VIP" if es else "Hours, flight board, parking, VIP"),
+            ("bring.html", "santa-ana", T[lang]["nav"][3][1], "Líquidos, comida al regresar, medicinas" if es else "Liquids, food coming back, medications"),
+            ("tips.html", "playa", T[lang]["nav"][4][1], "Manejo, agua, playas, emergencias" if es else "Driving, water, beaches, emergencies"),
+        ]
+        tiles = "".join(f'<a class="tile" href="{h}">{img(k, lang, depth, "(min-width: 900px) 220px, (min-width: 600px) 45vw, 92vw")}<span class="tbody"><b>{t}</b><span>{s}</span></span></a>' for h, k, t, s in guide_tiles)
         home = f"""
-<section class="card">
- <h2>{"Rastreador de tarifas a San Salvador (SAL)" if es else "Fare tracker to San Salvador (SAL)"}</h2>
- <div id="fares-status" class="notice">
-  <b>{"Tarifas próximamente." if es else "Fares coming soon."}</b>
-  {"Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados: verá tarifas reales aquí cuando estén disponibles." if es else "We are connecting a licensed price data source. We never show sample or made-up prices: real fares will appear here once they are available."}
+<div class="hero">
+ {img("coatepeque", lang, depth, "100vw", cls="hero-img", eager=True)}
+ <div class="hero-shade"></div>
+ <div class="wrap hero-text">
+  <p class="eyebrow">{"Guía bilingüe · Vuelos a San Salvador (SAL)" if es else "Bilingual guide · Flights to San Salvador (SAL)"}</p>
+  <h1>{"¿Vas de regreso a El Salvador?" if es else "Flying home to El Salvador?"}</h1>
+  <p class="lead">{"Tarifas vistas recientemente desde las ciudades con más salvadoreños en EE. UU., más requisitos de viaje con fuentes oficiales." if es else "Recently seen fares from the US cities where most Salvadorans live, plus travel rules backed by official sources."}</p>
+  <a class="btn" href="#fares">{"Ver tarifas desde tu ciudad" if es else "See fares from your city"} ↓</a>
  </div>
- <table class="fares" id="fares-table">
-  <thead><tr><th>{"Área" if es else "Metro area"}</th><th>{"Ruta" if es else "Route"}</th><th>{"Visto recientemente (últimas 48 h)" if es else "Recently seen (last 48 h)"}</th></tr></thead>
-  <tbody>{rows}</tbody>
- </table>
- <p class="small">{"Aeropuertos de las 10 áreas metropolitanas con más población de origen salvadoreño (Censo de EE. UU., ACS 2024)." if es else "Airports serving the 10 US metro areas with the largest Salvadoran-origin populations (US Census Bureau, ACS 2024 1-year, table B03001)."}</p>
+ <p class="photo-credit">{html.escape(PHOTOS["coatepeque"][lang])} · {PHOTOS["coatepeque"]["author"]}, {PHOTOS["coatepeque"]["license"]} · <a href="credits.html">{"créditos" if es else "credits"}</a></p>
+</div>
+<main id="main">
+<section class="wrap section" id="fares" aria-labelledby="fares-h">
+ <h2 id="fares-h">{"Ver tarifas desde tu ciudad" if es else "See fares from your city"}</h2>
+ <p class="sub">{"Elige tu área. Mostramos solo tarifas vistas en las últimas 48 horas, para 1 adulto, ida y vuelta, en económica." if es else "Pick your area. We only show fares seen in the last 48 hours, for 1 adult, round trip, economy."} <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
+ <div class="chips" role="group" aria-label="{"Áreas metropolitanas" if es else "Metro areas"}">
+  <button type="button" class="chip" data-metro="all" aria-pressed="true">{"Todas" if es else "All"}</button>{chips}
+ </div>
+ <div id="fares-status" class="notice" role="status">
+  <b>{"Tarifas próximamente." if es else "Fares coming soon."}</b>
+  {"Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados." if es else "We are connecting a licensed price data source. We never show sample or made-up prices."}
+ </div>
+ <div id="fares-list" class="metros">{groups}</div>
+ <p class="small">{"Las 10 áreas metropolitanas de EE. UU. con más población de origen salvadoreño (Censo de EE. UU., ACS 2024, tabla B03001)." if es else "The 10 US metro areas with the largest Salvadoran-origin populations (US Census Bureau, ACS 2024 1-year, table B03001)."}</p>
 </section>
 
-<section class="card">
- <h2>{"Alertas de tarifas gratis por correo" if es else "Free fare alerts by email"}</h2>
- <p>{"Muy pronto podrá recibir un aviso cuando bajen los precios desde su aeropuerto." if es else "Soon you'll be able to get an email when prices drop from your airport."}</p>
- <form class="signup" onsubmit="return false;" aria-disabled="true">
-  <input type="email" placeholder="{"su@correo.com" if es else "you@example.com"}" disabled>
-  <select disabled><option>{"Su aeropuerto" if es else "Your airport"}</option>{''.join(f'<option>{code}</option>' for _, code in AIRPORTS)}</select>
-  <button disabled>{"Próximamente" if es else "Coming soon"}</button>
- </form>
- <p class="small">{"El registro aún no está activo. No recopilamos correos todavía." if es else "Sign-up is not active yet. We are not collecting any emails yet."}</p>
- <h3>{"Alertas Premium" if es else "Premium alerts"}</h3>
- <p class="small">{"Alertas más rápidas y personalizadas por una pequeña suscripción mensual: próximamente." if es else "Faster, personalized alerts for a small monthly subscription: coming later."}</p>
+<section class="band">
+ <div class="wrap section">
+  <h2>{"Antes de viajar" if es else "Before you fly"}</h2>
+  <p class="sub">{"Requisitos y consejos con enlaces a fuentes oficiales." if es else "Rules and tips, each linked to an official source."}</p>
+  <div class="tiles">{tiles}</div>
+ </div>
 </section>
 
-<section class="grid">
- <a class="tile" href="entry.html"><b>{T[lang]['nav'][1][1]}</b><span>{"Pasaporte, DUI, menores, efectivo" if es else "Passport, DUI, minors, cash limits"}</span></a>
- <a class="tile" href="airport.html"><b>{T[lang]['nav'][2][1]}</b><span>{"Horario, vuelos, estacionamiento, VIP" if es else "Hours, flight board, parking, VIP"}</span></a>
- <a class="tile" href="bring.html"><b>{T[lang]['nav'][3][1]}</b><span>{"Líquidos, comida al regresar, medicinas" if es else "Liquids, food coming back, medications"}</span></a>
- <a class="tile" href="tips.html"><b>{T[lang]['nav'][4][1]}</b><span>{"Manejo, agua, playas, emergencias" if es else "Driving, water, beaches, emergencies"}</span></a>
+<section class="wrap section" aria-labelledby="alerts-h">
+ <div class="card alerts">
+  <h2 id="alerts-h">{"Alertas de tarifas gratis por correo" if es else "Free fare alerts by email"}</h2>
+  <p>{"Muy pronto podrá recibir un aviso cuando bajen los precios desde su aeropuerto." if es else "Soon you'll be able to get an email when prices drop from your airport."}</p>
+  <form class="signup" onsubmit="return false;" aria-disabled="true">
+   <label class="sr" for="em-{lang}">{"Correo" if es else "Email"}</label>
+   <input id="em-{lang}" type="email" placeholder="{"su@correo.com" if es else "you@example.com"}" disabled>
+   <button type="button" disabled>{"Próximamente" if es else "Coming soon"}</button>
+  </form>
+  <p class="small">{"El registro aún no está activo. No recopilamos correos todavía. Alertas Premium: más adelante." if es else "Sign-up is not active yet. We are not collecting any emails yet. Premium alerts: coming later."}</p>
+ </div>
 </section>
-<script src="{'../' if es else ''}assets/fares.js" defer></script>
+</main>
+<script src="{depth}assets/fares.js" defer></script>
 """
-        pages[(lang, "index.html")] = ("Inicio" if es else "Home", home)
+        pages[(lang, "index.html")] = ("Inicio" if es else "Home", home, "home", None)
+
+        # ---------- HOW PRICES WORK ----------
+        if es:
+            prices = f"""
+<h2>De dónde vienen los precios</h2>
+<p>Los precios vienen de la <b>API de datos de Aviasales a través de Travelpayouts</b>. Son precios que otros viajeros vieron cuando buscaron vuelos en Aviasales, guardados en caché. No hacemos búsquedas en vivo ni vendemos boletos.</p>
+<h2>Solo las últimas 48 horas</h2>
+<p>Mostramos una tarifa solo si podemos confirmar que alguien la vio en las <b>últimas 48 horas</b> y si el vuelo sale en más de 48 horas. Si no hay una tarifa así para un aeropuerto, verá «Sin tarifas recientes». Actualizamos los datos cada 6 horas aproximadamente, y la página vuelve a revisar la antigüedad cada vez que la abre.</p>
+<h2>Los precios no están garantizados</h2>
+<p>Los boletos baratos se agotan rápido. El precio de hoy puede ser mucho más alto que el visto recientemente. Por eso el botón dice «Ver precio de hoy»: abre una búsqueda en vivo en Aviasales. Los precios son por 1 adulto, ida y vuelta, en clase económica, en dólares.</p>
+<h2>Enlaces de afiliado</h2>
+<p>Los botones son enlaces de afiliado de Travelpayouts/Aviasales. Si compra después de hacer clic, podemos ganar una comisión <b>sin costo extra para usted</b>. Esto no cambia qué tarifas mostramos.</p>
+<h2>Nunca inventamos precios</h2>
+<p>Cada número en el rastreador viene de la API. No usamos precios de ejemplo, estimados ni promedios. Si no hay datos recientes, lo decimos.</p>
+"""
+        else:
+            prices = f"""
+<h2>Where the prices come from</h2>
+<p>Prices come from the <b>Aviasales Data API via Travelpayouts</b>. They are prices other travelers saw when they searched for flights on Aviasales, stored in a cache. We don't run live searches or sell tickets.</p>
+<h2>Only the last 48 hours</h2>
+<p>We show a fare only if we can confirm someone saw it in the <b>last 48 hours</b> and the flight leaves more than 48 hours from now. If an airport has no such fare, you'll see "No recent fares". We refresh the data about every 6 hours, and the page re-checks each fare's age every time you open it.</p>
+<h2>Prices are not guaranteed</h2>
+<p>Cheap seats sell out fast. Today's price can be much higher than the recently seen one. That's why the button says "Check today's price": it opens a live search on Aviasales. Prices are per 1 adult, round trip, economy, in US dollars.</p>
+<h2>Affiliate links</h2>
+<p>The buttons are Travelpayouts/Aviasales affiliate links. If you book after clicking, we may earn a commission <b>at no extra cost to you</b>. It doesn't change which fares we show.</p>
+<h2>We never invent prices</h2>
+<p>Every number in the tracker comes from the API. We don't use sample prices, estimates or averages. If there's no recent data, we say so.</p>
+"""
+        pages[(lang, "prices.html")] = ("Cómo funcionan nuestros precios" if es else "How our prices work", prices, None,
+                                        "Transparencia sobre las tarifas que mostramos." if es else "Plain answers about the fares we show.")
+
+        # ---------- CREDITS ----------
+        rows = "".join(
+            f'<li class="credit">{img(k, lang, depth, "160px")}<div><b>{html.escape(p[lang])}</b><br>'
+            f'{"Autor" if es else "Author"}: {html.escape(p["author"])} · {"Licencia" if es else "License"}: <a href="{p["license_url"]}" rel="license noopener" target="_blank">{p["license"]}</a><br>'
+            f'{"Fuente" if es else "Source"}: <a href="{p["src"]}" rel="noopener" target="_blank">Wikimedia Commons: {html.escape(p["title"])}</a><br>'
+            f'<span class="small">{"Redimensionada y convertida a WebP." if es else "Resized and converted to WebP."}</span></div></li>' for k, p in PHOTOS.items())
+        credits = f"""<p>{"Todas las fotos provienen de Wikimedia Commons. Verificamos la licencia de cada una en su página de Commons." if es else "All photos come from Wikimedia Commons. We checked each photo's license on its Commons page."}</p>
+<ul class="credits">{rows}</ul>
+<p class="small">{"Las fotos con licencia CC BY-SA se comparten bajo la misma licencia." if es else "CC BY-SA photos are shared under the same license."}</p>"""
+        pages[(lang, "credits.html")] = ("Créditos de fotos" if es else "Photo credits", credits, None, None)
 
         # ---------- ENTRY ----------
         if es:
@@ -306,11 +428,21 @@ def build():
 """
         pages[(lang, "tips.html")] = ("Seguridad y consejos" if es else "Safety & tips", tips)
 
-    for (lang, fname), (title, body) in pages.items():
+    leads = {
+     "entry.html": ("Pasaporte, DUI, menores y efectivo, con fuentes oficiales.", "Passport, DUI, minors and cash, with official sources."),
+     "airport.html": ("Aeropuerto Internacional de El Salvador San Óscar Arnulfo Romero y Galdámez.", "El Salvador International Airport San Óscar Arnulfo Romero y Galdámez."),
+     "bring.html": ("Qué llevar en la maleta, y qué puede traer de regreso.", "What to pack, and what you can bring back."),
+     "tips.html": ("Seguridad, manejo, salud y emergencias.", "Safety, driving, health and emergencies."),
+    }
+    for (lang, fname), val in pages.items():
+        if len(val) == 2:
+            title, body = val; hero = None; lead = leads.get(fname, (None, None))[0 if lang == "es" else 1]
+        else:
+            title, body, hero, lead = val
         d = os.path.join(OUT, T[lang]["prefix"])
         os.makedirs(d, exist_ok=True)
         with open(os.path.join(d, fname), "w") as f:
-            f.write(page(lang, fname, html.escape(title), body))
+            f.write(page(lang, fname, html.escape(title), body, hero=hero, lead=lead))
     print("built", len(pages), "pages")
 
 if __name__ == "__main__":

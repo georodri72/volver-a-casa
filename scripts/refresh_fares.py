@@ -19,7 +19,7 @@ Affiliate link: Aviasales page URL + marker=<partner ID> (Travelpayouts manual l
 import json, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone, timedelta
 
-ORIGINS = ["LAX", "ONT", "IAD", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "BOS", "MIA", "ATL"]
+ORIGINS = ["LAX", "IAD", "DCA", "BWI", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "SJC", "ONT", "BOS", "MIA", "FLL", "ATL"]  # keep in sync with METROS in build.py
 DEST = "SAL"
 MAX_AGE_HOURS = 48
 MIN_LEAD_HOURS = 48

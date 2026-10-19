@@ -4,6 +4,21 @@
   var es = location.pathname.indexOf('/es/') !== -1;
   var loc = es ? 'es-SV' : 'en-US';
   var url = (es ? '../' : '') + 'data/fares.json';
+  // Metro selector: filters the airport groups; state mirrored in the URL hash (#metro-dc).
+  var chips = document.querySelectorAll('.chip'), groups = document.querySelectorAll('.fcard');
+  function pick(m, scroll) {
+    chips.forEach(function (c) { c.setAttribute('aria-pressed', String(c.getAttribute('data-metro') === m)); });
+    groups.forEach(function (g) { g.hidden = !(m === 'all' || g.getAttribute('data-metro') === m); });
+    if (scroll) document.getElementById('fares-list').scrollIntoView({ block: 'nearest' });
+  }
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var m = c.getAttribute('data-metro'); pick(m, false);
+      history.replaceState(null, '', m === 'all' ? '#fares' : '#metro-' + m);
+    });
+  });
+  var h = location.hash.match(/^#metro-(\w+)$/); if (h && document.querySelector('.chip[data-metro="' + h[1] + '"]')) pick(h[1], true);
+
   function ago(ms) {
     var h = Math.floor(ms / 3600000);
     if (h < 1) return es ? 'hace menos de 1 hora' : 'less than 1 hour ago';
@@ -25,7 +40,7 @@
       if (age >= 0 && age <= maxAge && new Date(f.departure_at).getTime() > now) { f._age = age; byCode[f.origin] = f; }
     });
     var shown = 0;
-    document.querySelectorAll('#fares-table tbody tr').forEach(function (tr) {
+    document.querySelectorAll('.fcard').forEach(function (tr) {
       var f = byCode[tr.getAttribute('data-code')], td = tr.querySelector('.fare');
       td.innerHTML = '';
       if (!f) { td.appendChild(el('span', 'small', es ? 'Sin tarifas recientes' : 'No recent fares')); return; }

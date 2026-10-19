@@ -5,56 +5,78 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Inicio · Volver a Casa</title>
 <meta name="description" content="Guía de viaje y rastreador de tarifas para salvadoreños que vuelan a casa (SAL)">
+<meta name="theme-color" content="#0047AB">
 <link rel="alternate" hreflang="en" href="/index.html">
 <link rel="alternate" hreflang="es" href="/es/index.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230047AB'/%3E%3Crect y='11' width='32' height='10' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preload" as="image" type="image/webp" imagesrcset="../img/coatepeque-640.webp 640w, ../img/coatepeque-1024.webp 1024w, ../img/coatepeque-1600.webp 1600w" imagesizes="100vw">
 <link rel="stylesheet" href="../assets/style.css">
 </head>
 <body>
-<header>
- <div class="wrap top">
-  <a class="brand" href="index.html">🇸🇻 Volver a Casa</a>
-  <a class="lang" href="../index.html" hreflang="en">English</a>
+<a class="skip" href="#main">Saltar al contenido</a>
+<header class="site">
+ <div class="wrap bar">
+  <a class="brand" href="index.html"><span class="flag" aria-hidden="true"></span>Volver a Casa</a>
+  <a class="lang" href="../index.html" hreflang="en" lang="en">English</a>
  </div>
- <div class="wrap"><p class="tag">Guía de viaje y rastreador de tarifas para salvadoreños que vuelan a casa (SAL)</p><nav><a href="index.html" class=active>Inicio y tarifas</a><a href="entry.html">Requisitos de ingreso</a><a href="airport.html">Aeropuerto SAL</a><a href="bring.html">Qué llevar</a><a href="tips.html">Seguridad y consejos</a></nav></div>
+ <nav class="wrap nav" aria-label="Principal"><a href="index.html" aria-current=page>Tarifas</a><a href="entry.html">Requisitos de ingreso</a><a href="airport.html">Aeropuerto SAL</a><a href="bring.html">Qué llevar</a><a href="tips.html">Seguridad y consejos</a><a href="prices.html">Cómo funcionan los precios</a></nav>
 </header>
-<main class="wrap">
-<h1>Inicio</h1>
 
-<section class="card">
- <h2>Rastreador de tarifas a San Salvador (SAL)</h2>
- <div id="fares-status" class="notice">
-  <b>Tarifas próximamente.</b>
-  Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados: verá tarifas reales aquí cuando estén disponibles.
+<div class="hero">
+ <img class="hero-img" src="../img/coatepeque-640.webp" srcset="../img/coatepeque-640.webp 640w, ../img/coatepeque-1024.webp 1024w, ../img/coatepeque-1600.webp 1600w" sizes="100vw" width="1600" height="1200" alt="Lago de Coatepeque, Santa Ana" fetchpriority="high">
+ <div class="hero-shade"></div>
+ <div class="wrap hero-text">
+  <p class="eyebrow">Guía bilingüe · Vuelos a San Salvador (SAL)</p>
+  <h1>¿Vas de regreso a El Salvador?</h1>
+  <p class="lead">Tarifas vistas recientemente desde las ciudades con más salvadoreños en EE. UU., más requisitos de viaje con fuentes oficiales.</p>
+  <a class="btn" href="#fares">Ver tarifas desde tu ciudad ↓</a>
  </div>
- <table class="fares" id="fares-table">
-  <thead><tr><th>Área</th><th>Ruta</th><th>Visto recientemente (últimas 48 h)</th></tr></thead>
-  <tbody><tr data-code="LAX"><td>Los Angeles</td><td><b>LAX</b> → SAL</td><td class="fare">—</td></tr><tr data-code="ONT"><td>Los Angeles / Inland Empire</td><td><b>ONT</b> → SAL</td><td class="fare">—</td></tr><tr data-code="IAD"><td>Washington DC / Baltimore</td><td><b>IAD</b> → SAL</td><td class="fare">—</td></tr><tr data-code="JFK"><td>New York</td><td><b>JFK</b> → SAL</td><td class="fare">—</td></tr><tr data-code="EWR"><td>New York / New Jersey</td><td><b>EWR</b> → SAL</td><td class="fare">—</td></tr><tr data-code="IAH"><td>Houston</td><td><b>IAH</b> → SAL</td><td class="fare">—</td></tr><tr data-code="HOU"><td>Houston</td><td><b>HOU</b> → SAL</td><td class="fare">—</td></tr><tr data-code="DFW"><td>Dallas–Fort Worth</td><td><b>DFW</b> → SAL</td><td class="fare">—</td></tr><tr data-code="SFO"><td>San Francisco</td><td><b>SFO</b> → SAL</td><td class="fare">—</td></tr><tr data-code="OAK"><td>Oakland</td><td><b>OAK</b> → SAL</td><td class="fare">—</td></tr><tr data-code="BOS"><td>Boston</td><td><b>BOS</b> → SAL</td><td class="fare">—</td></tr><tr data-code="MIA"><td>Miami</td><td><b>MIA</b> → SAL</td><td class="fare">—</td></tr><tr data-code="ATL"><td>Atlanta</td><td><b>ATL</b> → SAL</td><td class="fare">—</td></tr></tbody>
- </table>
- <p class="small">Aeropuertos de las 10 áreas metropolitanas con más población de origen salvadoreño (Censo de EE. UU., ACS 2024).</p>
+ <p class="photo-credit">Lago de Coatepeque, Santa Ana · JMRAFFi, CC BY 4.0 · <a href="credits.html">créditos</a></p>
+</div>
+<main id="main">
+<section class="wrap section" id="fares" aria-labelledby="fares-h">
+ <h2 id="fares-h">Ver tarifas desde tu ciudad</h2>
+ <p class="sub">Elige tu área. Mostramos solo tarifas vistas en las últimas 48 horas, para 1 adulto, ida y vuelta, en económica. <a href="prices.html">Cómo funcionan nuestros precios</a></p>
+ <div class="chips" role="group" aria-label="Áreas metropolitanas">
+  <button type="button" class="chip" data-metro="all" aria-pressed="true">Todas</button><button type="button" class="chip" data-metro="la" aria-pressed="false">Los Ángeles</button><button type="button" class="chip" data-metro="dc" aria-pressed="false">Washington DC</button><button type="button" class="chip" data-metro="ny" aria-pressed="false">Nueva York</button><button type="button" class="chip" data-metro="hou" aria-pressed="false">Houston</button><button type="button" class="chip" data-metro="dfw" aria-pressed="false">Dallas–Fort Worth</button><button type="button" class="chip" data-metro="sf" aria-pressed="false">Área de la Bahía (SF)</button><button type="button" class="chip" data-metro="ie" aria-pressed="false">Inland Empire</button><button type="button" class="chip" data-metro="bos" aria-pressed="false">Boston</button><button type="button" class="chip" data-metro="mia" aria-pressed="false">Miami</button><button type="button" class="chip" data-metro="atl" aria-pressed="false">Atlanta</button>
+ </div>
+ <div id="fares-status" class="notice" role="status">
+  <b>Tarifas próximamente.</b>
+  Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados.
+ </div>
+ <div id="fares-list" class="metros"><ul class="fcards"><li class="fcard" data-code="LAX" data-metro="la"><p class="mlabel">Los Ángeles</p><div class="fhead"><span class="code">LAX</span><span class="aname">Los Angeles Intl</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="IAD" data-metro="dc"><p class="mlabel">Washington DC</p><div class="fhead"><span class="code">IAD</span><span class="aname">Washington Dulles</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="DCA" data-metro="dc"><p class="mlabel">Washington DC</p><div class="fhead"><span class="code">DCA</span><span class="aname">Reagan National</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="BWI" data-metro="dc"><p class="mlabel">Washington DC</p><div class="fhead"><span class="code">BWI</span><span class="aname">Baltimore/Washington</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="JFK" data-metro="ny"><p class="mlabel">Nueva York</p><div class="fhead"><span class="code">JFK</span><span class="aname">New York JFK</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="EWR" data-metro="ny"><p class="mlabel">Nueva York</p><div class="fhead"><span class="code">EWR</span><span class="aname">Newark Liberty</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="IAH" data-metro="hou"><p class="mlabel">Houston</p><div class="fhead"><span class="code">IAH</span><span class="aname">Houston Bush</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="HOU" data-metro="hou"><p class="mlabel">Houston</p><div class="fhead"><span class="code">HOU</span><span class="aname">Houston Hobby</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="DFW" data-metro="dfw"><p class="mlabel">Dallas–Fort Worth</p><div class="fhead"><span class="code">DFW</span><span class="aname">Dallas/Fort Worth</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="SFO" data-metro="sf"><p class="mlabel">Área de la Bahía (SF)</p><div class="fhead"><span class="code">SFO</span><span class="aname">San Francisco</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="OAK" data-metro="sf"><p class="mlabel">Área de la Bahía (SF)</p><div class="fhead"><span class="code">OAK</span><span class="aname">Oakland</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="SJC" data-metro="sf"><p class="mlabel">Área de la Bahía (SF)</p><div class="fhead"><span class="code">SJC</span><span class="aname">San José</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="ONT" data-metro="ie"><p class="mlabel">Inland Empire</p><div class="fhead"><span class="code">ONT</span><span class="aname">Ontario</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="BOS" data-metro="bos"><p class="mlabel">Boston</p><div class="fhead"><span class="code">BOS</span><span class="aname">Boston Logan</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="MIA" data-metro="mia"><p class="mlabel">Miami</p><div class="fhead"><span class="code">MIA</span><span class="aname">Miami</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="FLL" data-metro="mia"><p class="mlabel">Miami</p><div class="fhead"><span class="code">FLL</span><span class="aname">Fort Lauderdale</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li><li class="fcard" data-code="ATL" data-metro="atl"><p class="mlabel">Atlanta</p><div class="fhead"><span class="code">ATL</span><span class="aname">Atlanta</span><span class="arrow" aria-hidden="true">→ SAL</span></div><div class="fare"><span class="muted">Tarifas próximamente</span></div></li></ul></div>
+ <p class="small">Las 10 áreas metropolitanas de EE. UU. con más población de origen salvadoreño (Censo de EE. UU., ACS 2024, tabla B03001).</p>
 </section>
 
-<section class="card">
- <h2>Alertas de tarifas gratis por correo</h2>
- <p>Muy pronto podrá recibir un aviso cuando bajen los precios desde su aeropuerto.</p>
- <form class="signup" onsubmit="return false;" aria-disabled="true">
-  <input type="email" placeholder="su@correo.com" disabled>
-  <select disabled><option>Su aeropuerto</option><option>LAX</option><option>ONT</option><option>IAD</option><option>JFK</option><option>EWR</option><option>IAH</option><option>HOU</option><option>DFW</option><option>SFO</option><option>OAK</option><option>BOS</option><option>MIA</option><option>ATL</option></select>
-  <button disabled>Próximamente</button>
- </form>
- <p class="small">El registro aún no está activo. No recopilamos correos todavía.</p>
- <h3>Alertas Premium</h3>
- <p class="small">Alertas más rápidas y personalizadas por una pequeña suscripción mensual: próximamente.</p>
+<section class="band">
+ <div class="wrap section">
+  <h2>Antes de viajar</h2>
+  <p class="sub">Requisitos y consejos con enlaces a fuentes oficiales.</p>
+  <div class="tiles"><a class="tile" href="entry.html"><img class="" src="../img/suchitoto-480.webp" srcset="../img/suchitoto-480.webp 480w, ../img/suchitoto-800.webp 800w" sizes="(min-width: 900px) 220px, (min-width: 600px) 45vw, 92vw" width="800" height="533" alt="Calle empedrada en Suchitoto" loading="lazy" decoding="async"><span class="tbody"><b>Requisitos de ingreso</b><span>Pasaporte, DUI, menores, efectivo</span></span></a><a class="tile" href="airport.html"><img class="" src="../img/coatepeque-640.webp" srcset="../img/coatepeque-640.webp 640w, ../img/coatepeque-1024.webp 1024w, ../img/coatepeque-1600.webp 1600w" sizes="(min-width: 900px) 220px, (min-width: 600px) 45vw, 92vw" width="1600" height="1200" alt="Lago de Coatepeque, Santa Ana" loading="lazy" decoding="async"><span class="tbody"><b>Aeropuerto SAL</b><span>Horario, vuelos, estacionamiento, VIP</span></span></a><a class="tile" href="bring.html"><img class="" src="../img/santa-ana-480.webp" srcset="../img/santa-ana-480.webp 480w, ../img/santa-ana-800.webp 800w" sizes="(min-width: 900px) 220px, (min-width: 600px) 45vw, 92vw" width="800" height="600" alt="Laguna del cráter del volcán de Santa Ana (Ilamatepec)" loading="lazy" decoding="async"><span class="tbody"><b>Qué llevar</b><span>Líquidos, comida al regresar, medicinas</span></span></a><a class="tile" href="tips.html"><img class="" src="../img/playa-480.webp" srcset="../img/playa-480.webp 480w, ../img/playa-800.webp 800w" sizes="(min-width: 900px) 220px, (min-width: 600px) 45vw, 92vw" width="800" height="600" alt="Playa en la costa del Pacífico, El Salvador" loading="lazy" decoding="async"><span class="tbody"><b>Seguridad y consejos</b><span>Manejo, agua, playas, emergencias</span></span></a></div>
+ </div>
 </section>
 
-<section class="grid">
- <a class="tile" href="entry.html"><b>Requisitos de ingreso</b><span>Pasaporte, DUI, menores, efectivo</span></a>
- <a class="tile" href="airport.html"><b>Aeropuerto SAL</b><span>Horario, vuelos, estacionamiento, VIP</span></a>
- <a class="tile" href="bring.html"><b>Qué llevar</b><span>Líquidos, comida al regresar, medicinas</span></a>
- <a class="tile" href="tips.html"><b>Seguridad y consejos</b><span>Manejo, agua, playas, emergencias</span></a>
+<section class="wrap section" aria-labelledby="alerts-h">
+ <div class="card alerts">
+  <h2 id="alerts-h">Alertas de tarifas gratis por correo</h2>
+  <p>Muy pronto podrá recibir un aviso cuando bajen los precios desde su aeropuerto.</p>
+  <form class="signup" onsubmit="return false;" aria-disabled="true">
+   <label class="sr" for="em-es">Correo</label>
+   <input id="em-es" type="email" placeholder="su@correo.com" disabled>
+   <button type="button" disabled>Próximamente</button>
+  </form>
+  <p class="small">El registro aún no está activo. No recopilamos correos todavía. Alertas Premium: más adelante.</p>
+ </div>
 </section>
+</main>
 <script src="../assets/fares.js" defer></script>
 
-</main>
-<footer><div class="wrap"><p>Información verificada el 2026-10-17 con las fuentes oficiales enlazadas en cada página. Las reglas cambian: confirme siempre con la fuente y con su aerolínea antes de viajar. Este sitio es independiente y no está afiliado a ningún gobierno ni aerolínea.</p></div></footer>
+<footer class="site">
+ <div class="wrap">
+  <p class="brandline"><span class="flag" aria-hidden="true"></span>Volver a Casa</p>
+  <p>Información de la guía verificada el 2026-10-17 con las fuentes oficiales enlazadas en cada página. Las reglas cambian: confirme siempre con la fuente y con su aerolínea antes de viajar. Este sitio es independiente y no está afiliado a ningún gobierno ni aerolínea.</p>
+  <p class="foot-links"><a href="prices.html">Cómo funcionan nuestros precios</a> · <a href="credits.html">Créditos de fotos</a></p>
+ </div>
+</footer>
 </body>
 </html>
