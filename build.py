@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generates the bilingual static site into public/. Run: python3 build.py
 No dependencies. Every factual statement on guide pages carries a source link."""
-import os, html
+import os, html, hashlib
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public")
 CHECKED = "2026-10-17"
@@ -89,6 +89,11 @@ T = {
  },
 }
 
+def asset_v(rel):
+    """Short content hash so a deploy never serves new HTML with a CDN-cached old CSS/JS (Render edge s-maxage=300)."""
+    with open(os.path.join(OUT, rel), "rb") as f:
+        return hashlib.sha1(f.read()).hexdigest()[:8]
+
 def page(lang, fname, title, body, hero=None, lead=None):
     t = T[lang]
     depth = "../" if lang == "es" else ""
@@ -118,7 +123,7 @@ def page(lang, fname, title, body, hero=None, lead=None):
 <link rel="alternate" hreflang="x-default" href="{SITE}/{'' if fname=='index.html' else fname}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230047AB'/%3E%3Crect y='11' width='32' height='10' fill='%23fff'/%3E%3C/svg%3E">
 {preload}
-<link rel="stylesheet" href="{depth}assets/style.css">
+<link rel="stylesheet" href="{depth}assets/style.css?v={asset_v('assets/style.css')}">
 </head>
 <body>
 <a class="skip" href="#main">{skip}</a>
@@ -214,7 +219,7 @@ def build():
  </div>
 </section>
 </main>
-<script src="{depth}assets/fares.js" defer></script>
+<script src="{depth}assets/fares.js?v={asset_v('assets/fares.js')}" defer></script>
 """
         pages[(lang, "index.html")] = ("Inicio" if es else "Home", home, "home", None)
 
