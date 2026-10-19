@@ -7,13 +7,15 @@ Freshness rule (see launch_plan.md section 11):
   * Candidates come from v3 prices_for_dates (airport-level, includes a booking link).
   * Each candidate must match an entry in v3 get_latest_prices with the SAME departure
     datetime, return datetime and price, which gives a precise found_at timestamp.
-  * Keep it only if found_at is within MAX_AGE_HOURS (48 h; the docs describe
-    prices_for_dates as "found by Aviasales users in the last 48 hours", but the cache
-    actually returned entries up to ~7 days old, so we enforce it ourselves).
+  * Keep it only if found_at is within MAX_AGE_HOURS (6 h). Cached fares go stale fast:
+    a fare seen ~$400 was ~$776 on a live search hours later, so the window is short.
+    (The docs describe prices_for_dates as "last 48 hours" but it returned ~7-day-old entries.)
   * Departure must be at least MIN_LEAD_HOURS in the future.
   * Return date must be later than the departure date (no same-day round trips).
   * Fares without a verifiable timestamp are dropped. Routes with nothing left show
-    "no recent fares". The browser also hides fares older than 48 h at view time.
+    "no recent fares". The browser also hides fares older than 6 h at view time.
+  * If the fares are unchanged since the last run, the file (including updated_at) is left
+    byte-identical, so the hourly workflow commits nothing and Render does not rebuild.
 Docs: https://support.travelpayouts.com/hc/en-us/articles/203956163-Aviasales-Data-API
 Affiliate link: Aviasales page URL + marker=<partner ID> (Travelpayouts manual link template)
 """
@@ -22,7 +24,7 @@ from datetime import datetime, timezone, timedelta
 
 ORIGINS = ["LAX", "IAD", "DCA", "BWI", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "SJC", "ONT", "BOS", "MIA", "FLL", "ATL"]  # keep in sync with METROS in build.py
 DEST = "SAL"
-MAX_AGE_HOURS = 48
+MAX_AGE_HOURS = 6
 MIN_LEAD_HOURS = 48
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "data", "fares.json")
 BASE = "https://api.travelpayouts.com"
@@ -106,6 +108,14 @@ def main():
     data = {"status": "live" if fares else "pending", "source": "Aviasales (Travelpayouts Data API)",
             "updated_at": now.isoformat(timespec="seconds"), "max_age_hours": MAX_AGE_HOURS,
             "currency": "usd", "market": "us", "no_data": empty, "fares": fares}
+    try:  # keep the file identical when nothing but the timestamp would change
+        with open(OUT) as f:
+            prev = json.load(f)
+        if {k: v for k, v in prev.items() if k != "updated_at"} == {k: v for k, v in data.items() if k != "updated_at"}:
+            print(f"no change in fares ({len(fares)}); leaving fares.json untouched")
+            return 0
+    except (OSError, ValueError):
+        pass
     with open(OUT, "w") as f:
         json.dump(data, f, indent=2)
         f.write("\n")

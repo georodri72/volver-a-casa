@@ -181,7 +181,7 @@ def build():
 <main id="main">
 <section class="wrap section" id="fares" aria-labelledby="fares-h">
  <h2 id="fares-h">{"Ver tarifas desde tu ciudad" if es else "See fares from your city"}</h2>
- <p class="sub">{"Elige tu área. Mostramos solo tarifas vistas en las últimas 48 horas, para 1 adulto, ida y vuelta, en económica." if es else "Pick your area. We only show fares seen in the last 48 hours, for 1 adult, round trip, economy."} <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
+ <p class="sub">{"Elige tu área. Mostramos solo tarifas vistas en las últimas 6 horas, para 1 adulto, ida y vuelta, en económica." if es else "Pick your area. We only show fares seen in the last 6 hours, for 1 adult, round trip, economy."} <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
  <div class="chips" role="group" aria-label="{"Áreas metropolitanas" if es else "Metro areas"}">
   <button type="button" class="chip" data-metro="all" aria-pressed="true">{"Todas" if es else "All"}</button>{chips}
  </div>
@@ -223,10 +223,10 @@ def build():
             prices = f"""
 <h2>De dónde vienen los precios</h2>
 <p>Los precios vienen de la <b>API de datos de Aviasales a través de Travelpayouts</b>. Son precios que otros viajeros vieron cuando buscaron vuelos en Aviasales, guardados en caché. No hacemos búsquedas en vivo ni vendemos boletos.</p>
-<h2>Solo las últimas 48 horas</h2>
-<p>Mostramos una tarifa solo si podemos confirmar que alguien la vio en las <b>últimas 48 horas</b> y si el vuelo sale en más de 48 horas. Si no hay una tarifa así para un aeropuerto, verá «Sin tarifas recientes». Actualizamos los datos cada 6 horas aproximadamente, y la página vuelve a revisar la antigüedad cada vez que la abre.</p>
+<h2>Solo las últimas 6 horas</h2>
+<p>Mostramos una tarifa solo si podemos confirmar que alguien la vio en las <b>últimas 6 horas</b> y si el vuelo sale en más de 48 horas. Usamos una ventana corta porque las tarifas baratas suelen agotarse en pocas horas: un precio visto hace un día puede ya no existir. Si no hay una tarifa así para un aeropuerto, verá «Sin tarifas recientes». Revisamos los datos cada hora, y la página vuelve a revisar la antigüedad cada vez que la abre.</p>
 <h2>Los precios no están garantizados</h2>
-<p>Los boletos baratos se agotan rápido. El precio de hoy puede ser mucho más alto que el visto recientemente. Por eso el botón dice «Ver precio de hoy»: abre una búsqueda en vivo en Aviasales. Los precios son por 1 adulto, ida y vuelta, en clase económica, en dólares.</p>
+<p>Los boletos baratos se agotan rápido. El precio de hoy puede ser mucho más alto que el visto recientemente. Por eso mostramos «Precio cuando se vio» y el botón dice «Ver precio de hoy»: abre una búsqueda en vivo en Aviasales. Los precios son por 1 adulto, ida y vuelta, en clase económica, en dólares.</p>
 <h2>Enlaces de afiliado</h2>
 <p>Los botones son enlaces de afiliado de Travelpayouts/Aviasales. Si compra después de hacer clic, podemos ganar una comisión <b>sin costo extra para usted</b>. Esto no cambia qué tarifas mostramos.</p>
 <h2>Nunca inventamos precios</h2>
@@ -236,10 +236,10 @@ def build():
             prices = f"""
 <h2>Where the prices come from</h2>
 <p>Prices come from the <b>Aviasales Data API via Travelpayouts</b>. They are prices other travelers saw when they searched for flights on Aviasales, stored in a cache. We don't run live searches or sell tickets.</p>
-<h2>Only the last 48 hours</h2>
-<p>We show a fare only if we can confirm someone saw it in the <b>last 48 hours</b> and the flight leaves more than 48 hours from now. If an airport has no such fare, you'll see "No recent fares". We refresh the data about every 6 hours, and the page re-checks each fare's age every time you open it.</p>
+<h2>Only the last 6 hours</h2>
+<p>We show a fare only if we can confirm someone saw it in the <b>last 6 hours</b> and the flight leaves more than 48 hours from now. We use a short window because cheap fares often sell out within hours: a price seen a day ago may already be gone. If an airport has no such fare, you'll see "No recent fares". We check for new data every hour, and the page re-checks each fare's age every time you open it.</p>
 <h2>Prices are not guaranteed</h2>
-<p>Cheap seats sell out fast. Today's price can be much higher than the recently seen one. That's why the button says "Check today's price": it opens a live search on Aviasales. Prices are per 1 adult, round trip, economy, in US dollars.</p>
+<p>Cheap seats sell out fast. Today's price can be much higher than the recently seen one. That's why we label it "Price when seen" and the button says "Check today's price": it opens a live search on Aviasales. Prices are per 1 adult, round trip, economy, in US dollars.</p>
 <h2>Affiliate links</h2>
 <p>The buttons are Travelpayouts/Aviasales affiliate links. If you book after clicking, we may earn a commission <b>at no extra cost to you</b>. It doesn't change which fares we show.</p>
 <h2>We never invent prices</h2>
