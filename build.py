@@ -5,6 +5,7 @@ import os, html
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public")
 CHECKED = "2026-10-17"
+SITE = os.environ.get("SITE_URL", "https://volver-a-casa-ak17.onrender.com")  # absolute URLs for hreflang/canonical
 
 SRC = {
  "state": ("U.S. Department of State – El Salvador", "https://travel.state.gov/content/travel/en/international-travel/International-Travel-Country-Information-Pages/ElSalvador.html"),
@@ -111,8 +112,10 @@ def page(lang, fname, title, body, hero=None, lead=None):
 <title>{title} · {t['site']}</title>
 <meta name="description" content="{t['tag']}">
 <meta name="theme-color" content="#0047AB">
-<link rel="alternate" hreflang="en" href="/{fname}">
-<link rel="alternate" hreflang="es" href="/es/{fname}">
+<link rel="canonical" href="{SITE}/{t['prefix']}{'' if fname=='index.html' else fname}">
+<link rel="alternate" hreflang="en" href="{SITE}/{'' if fname=='index.html' else fname}">
+<link rel="alternate" hreflang="es" href="{SITE}/es/{'' if fname=='index.html' else fname}">
+<link rel="alternate" hreflang="x-default" href="{SITE}/{'' if fname=='index.html' else fname}">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230047AB'/%3E%3Crect y='11' width='32' height='10' fill='%23fff'/%3E%3C/svg%3E">
 {preload}
 <link rel="stylesheet" href="{depth}assets/style.css">
