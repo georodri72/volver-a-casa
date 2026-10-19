@@ -1,0 +1,4 @@
+{
+  "_comment": "Airports whose fares are fetched (scripts/refresh_fares.py) and shown (build.py). To re-enable more cities, add codes here, e.g. LAX, BWI, JFK, EWR, IAH, HOU, DFW, SFO, OAK, SJC, ONT, BOS, MIA, FLL, ATL. Every code must exist in METROS in build.py.",
+  "active": ["DCA", "IAD"]
+}

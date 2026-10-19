@@ -22,7 +22,19 @@ Affiliate link: Aviasales page URL + marker=<partner ID> (Travelpayouts manual l
 import json, os, re, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timezone, timedelta
 
-ORIGINS = ["LAX", "IAD", "DCA", "BWI", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "SJC", "ONT", "BOS", "MIA", "FLL", "ATL"]  # keep in sync with METROS in build.py
+ALL_ORIGINS = ["LAX", "IAD", "DCA", "BWI", "JFK", "EWR", "IAH", "HOU", "DFW", "SFO", "OAK", "SJC", "ONT", "BOS", "MIA", "FLL", "ATL"]  # every airport in METROS (build.py)
+CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "config", "airports.json")
+
+def active_origins():
+    """Airports to fetch: config/airports.json 'active' list (falls back to ALL_ORIGINS)."""
+    try:
+        with open(CONFIG) as f:
+            act = [c for c in json.load(f).get("active", []) if c in ALL_ORIGINS]
+        return act or ALL_ORIGINS
+    except (OSError, ValueError):
+        return ALL_ORIGINS
+
+ORIGINS = active_origins()
 DEST = "SAL"
 MAX_AGE_HOURS = 6
 MIN_LEAD_HOURS = 48

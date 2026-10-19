@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generates the bilingual static site into public/. Run: python3 build.py
 No dependencies. Every factual statement on guide pages carries a source link."""
-import os, html, hashlib
+import os, html, hashlib, json
 
 OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "public")
 CHECKED = "2026-10-17"
@@ -42,6 +42,10 @@ METROS = [
  ("mia", "Miami", "Miami", ["MIA", "FLL"]),
  ("atl", "Atlanta", "Atlanta", ["ATL"]),
 ]
+_CFG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "airports.json")
+with open(_CFG) as _f:
+    ACTIVE = [c for c in json.load(_f)["active"]]  # shared with scripts/refresh_fares.py
+
 AIRPORT_NAMES = {
  "LAX": "Los Angeles Intl", "IAD": "Washington Dulles", "DCA": "Reagan National", "BWI": "Baltimore/Washington",
  "JFK": "New York JFK", "EWR": "Newark Liberty", "IAH": "Houston Bush", "HOU": "Houston Hobby",
@@ -156,9 +160,35 @@ def build():
         depth = "../" if es else ""
         c = lambda *k: cite(*k, lang=lang)
         # ---------- HOME ----------
-        chips = "".join(f'<button type="button" class="chip" data-metro="{mid}" aria-pressed="false">{html.escape(ne if not es else ns)}</button>' for mid, ne, ns, _ in METROS)
+        metro_of = {code: (mid, ne, ns) for mid, ne, ns, codes in METROS for code in codes}
+        active = [c for c in ACTIVE if c in metro_of]
+        act_metros = [m for m in METROS if any(c in active for c in m[3])]
+        single = len(act_metros) == 1
+        chips = "".join(f'<button type="button" class="chip" data-metro="{mid}" aria-pressed="false">{html.escape(ne if not es else ns)}</button>' for mid, ne, ns, _ in act_metros)
+        y = " y " if es else " and "
+        codes_txt = y.join(", ".join(active[:-1]) and [", ".join(active[:-1]), active[-1]] or [active[-1]])
+        names_txt = y.join(", ".join(f"{AIRPORT_NAMES[c]} ({c})" for c in active[:-1]) and [", ".join(f"{AIRPORT_NAMES[c]} ({c})" for c in active[:-1]), f"{AIRPORT_NAMES[active[-1]]} ({active[-1]})"] or [f"{AIRPORT_NAMES[active[-1]]} ({active[-1]})"])
+        if single:
+            mname = act_metros[0][2] if es else act_metros[0][1]
+            fares_h = f"Tarifas desde {mname} ({codes_txt}) a San Salvador" if es else f"Fares from {mname} ({codes_txt}) to San Salvador"
+            fares_sub = (f"Por ahora solo mostramos tarifas desde {names_txt}. Más ciudades próximamente. Mostramos solo tarifas vistas en las últimas 6 horas, para 1 adulto, ida y vuelta, en económica." if es else
+                         f"For now we only show fares from {names_txt}. More cities coming soon. We only show fares seen in the last 6 hours, for 1 adult, round trip, economy.")
+            hero_lead = (f"Tarifas vistas recientemente desde {mname} ({codes_txt}) a San Salvador, más requisitos de viaje con fuentes oficiales. Más ciudades próximamente." if es else
+                         f"Recently seen fares from {mname} ({codes_txt}) to San Salvador, plus travel rules backed by official sources. More cities coming soon.")
+            cta = f"Ver tarifas desde {mname}" if es else f"See fares from {mname}"
+            chips_html = ""
+            foot_note = ""
+        else:
+            fares_h = "Ver tarifas desde tu ciudad" if es else "See fares from your city"
+            fares_sub = "Elige tu área. Mostramos solo tarifas vistas en las últimas 6 horas, para 1 adulto, ida y vuelta, en económica." if es else "Pick your area. We only show fares seen in the last 6 hours, for 1 adult, round trip, economy."
+            hero_lead = "Tarifas vistas recientemente desde las ciudades con más salvadoreños en EE. UU., más requisitos de viaje con fuentes oficiales." if es else "Recently seen fares from the US cities where most Salvadorans live, plus travel rules backed by official sources."
+            cta = fares_h
+            chips_html = f''' <div class="chips" role="group" aria-label="{"Áreas metropolitanas" if es else "Metro areas"}">
+  <button type="button" class="chip" data-metro="all" aria-pressed="true">{"Todas" if es else "All"}</button>{chips}
+ </div>'''
+            foot_note = f'<p class="small">{"Las 10 áreas metropolitanas de EE. UU. con más población de origen salvadoreño (Censo de EE. UU., ACS 2024, tabla B03001)." if es else "The 10 US metro areas with the largest Salvadoran-origin populations (US Census Bureau, ACS 2024 1-year, table B03001)."}</p>'
         cards = ""
-        for mid, ne, ns, codes in METROS:
+        for mid, ne, ns, codes in [(metro_of[c][0], metro_of[c][1], metro_of[c][2], [c]) for c in active]:
             for code in codes:
                 cards += (f'<li class="fcard" data-code="{code}" data-metro="{mid}"><p class="mlabel">{html.escape(ns if es else ne)}</p>'
                           f'<div class="fhead"><span class="code">{code}</span><span class="aname">{AIRPORT_NAMES[code]}</span><span class="arrow" aria-hidden="true">→ SAL</span></div>'
@@ -178,24 +208,22 @@ def build():
  <div class="wrap hero-text">
   <p class="eyebrow">{"Guía bilingüe · Vuelos a San Salvador (SAL)" if es else "Bilingual guide · Flights to San Salvador (SAL)"}</p>
   <h1>{"¿Vas de regreso a El Salvador?" if es else "Flying home to El Salvador?"}</h1>
-  <p class="lead">{"Tarifas vistas recientemente desde las ciudades con más salvadoreños en EE. UU., más requisitos de viaje con fuentes oficiales." if es else "Recently seen fares from the US cities where most Salvadorans live, plus travel rules backed by official sources."}</p>
-  <a class="btn" href="#fares">{"Ver tarifas desde tu ciudad" if es else "See fares from your city"} ↓</a>
+  <p class="lead">{hero_lead}</p>
+  <a class="btn" href="#fares">{cta} ↓</a>
  </div>
  <p class="photo-credit">{html.escape(PHOTOS["coatepeque"][lang])} · {PHOTOS["coatepeque"]["author"]}, {PHOTOS["coatepeque"]["license"]} · <a href="credits.html">{"créditos" if es else "credits"}</a></p>
 </div>
 <main id="main">
 <section class="wrap section" id="fares" aria-labelledby="fares-h">
- <h2 id="fares-h">{"Ver tarifas desde tu ciudad" if es else "See fares from your city"}</h2>
- <p class="sub">{"Elige tu área. Mostramos solo tarifas vistas en las últimas 6 horas, para 1 adulto, ida y vuelta, en económica." if es else "Pick your area. We only show fares seen in the last 6 hours, for 1 adult, round trip, economy."} <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
- <div class="chips" role="group" aria-label="{"Áreas metropolitanas" if es else "Metro areas"}">
-  <button type="button" class="chip" data-metro="all" aria-pressed="true">{"Todas" if es else "All"}</button>{chips}
- </div>
+ <h2 id="fares-h">{fares_h}</h2>
+ <p class="sub">{fares_sub} <a href="prices.html">{"Cómo funcionan nuestros precios" if es else "How our prices work"}</a></p>
+{chips_html}
  <div id="fares-status" class="notice" role="status">
   <b>{"Tarifas próximamente." if es else "Fares coming soon."}</b>
   {"Estamos conectando una fuente de precios autorizada. No mostramos precios de ejemplo ni inventados." if es else "We are connecting a licensed price data source. We never show sample or made-up prices."}
  </div>
  <div id="fares-list" class="metros">{groups}</div>
- <p class="small">{"Las 10 áreas metropolitanas de EE. UU. con más población de origen salvadoreño (Censo de EE. UU., ACS 2024, tabla B03001)." if es else "The 10 US metro areas with the largest Salvadoran-origin populations (US Census Bureau, ACS 2024 1-year, table B03001)."}</p>
+ {foot_note}
 </section>
 
 <section class="band">
@@ -228,6 +256,8 @@ def build():
             prices = f"""
 <h2>De dónde vienen los precios</h2>
 <p>Los precios vienen de la <b>API de datos de Aviasales a través de Travelpayouts</b>. Son precios que otros viajeros vieron cuando buscaron vuelos en Aviasales, guardados en caché. No hacemos búsquedas en vivo ni vendemos boletos.</p>
+<h2>Qué aeropuertos cubrimos</h2>
+<p>Por ahora mostramos tarifas a San Salvador (SAL) solo desde {names_txt}. Más ciudades próximamente.</p>
 <h2>Solo las últimas 6 horas</h2>
 <p>Mostramos una tarifa solo si podemos confirmar que alguien la vio en las <b>últimas 6 horas</b> y si el vuelo sale en más de 48 horas. Usamos una ventana corta porque las tarifas baratas suelen agotarse en pocas horas: un precio visto hace un día puede ya no existir. Si no hay una tarifa así para un aeropuerto, verá «Sin tarifas recientes». Revisamos los datos cada hora, y la página vuelve a revisar la antigüedad cada vez que la abre.</p>
 <h2>Los precios no están garantizados</h2>
@@ -241,6 +271,8 @@ def build():
             prices = f"""
 <h2>Where the prices come from</h2>
 <p>Prices come from the <b>Aviasales Data API via Travelpayouts</b>. They are prices other travelers saw when they searched for flights on Aviasales, stored in a cache. We don't run live searches or sell tickets.</p>
+<h2>Which airports we cover</h2>
+<p>For now we show fares to San Salvador (SAL) only from {names_txt}. More cities coming soon.</p>
 <h2>Only the last 6 hours</h2>
 <p>We show a fare only if we can confirm someone saw it in the <b>last 6 hours</b> and the flight leaves more than 48 hours from now. We use a short window because cheap fares often sell out within hours: a price seen a day ago may already be gone. If an airport has no such fare, you'll see "No recent fares". We check for new data every hour, and the page re-checks each fare's age every time you open it.</p>
 <h2>Prices are not guaranteed</h2>
