@@ -11,6 +11,7 @@ Freshness rule (see launch_plan.md section 11):
     prices_for_dates as "found by Aviasales users in the last 48 hours", but the cache
     actually returned entries up to ~7 days old, so we enforce it ourselves).
   * Departure must be at least MIN_LEAD_HOURS in the future.
+  * Return date must be later than the departure date (no same-day round trips).
   * Fares without a verifiable timestamp are dropped. Routes with nothing left show
     "no recent fares". The browser also hides fares older than 48 h at view time.
 Docs: https://support.travelpayouts.com/hc/en-us/articles/203956163-Aviasales-Data-API
@@ -83,6 +84,9 @@ def main():
             dep = parse_ts(t["departure_at"])
             fa = idx.get((t["departure_at"], t["return_at"], t["price"]))
             if not dep or dep < now + timedelta(hours=MIN_LEAD_HOURS) or not fa:
+                continue
+            # Drop unrealistic round trips: return on the same calendar day as departure, or earlier.
+            if t["return_at"][:10] <= t["departure_at"][:10]:
                 continue
             if timedelta(0) <= now - fa <= timedelta(hours=MAX_AGE_HOURS):
                 fresh.append((t, fa))
