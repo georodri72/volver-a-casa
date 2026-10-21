@@ -1,14 +1,28 @@
 {
   "status": "live",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-10-21T15:17:49+00:00",
+  "updated_at": "2026-10-21T20:11:24+00:00",
   "max_age_hours": 6,
   "currency": "usd",
   "market": "us",
-  "no_data": [
-    "DCA"
-  ],
+  "no_data": [],
   "fares": [
+    {
+      "origin": "DCA",
+      "destination": "SAL",
+      "price": 1563,
+      "currency": "usd",
+      "round_trip": true,
+      "passengers": 1,
+      "trip_class": "economy",
+      "airline": "AA",
+      "transfers": 2,
+      "return_transfers": 1,
+      "departure_at": "2026-12-23T11:56:00-05:00",
+      "return_at": "2027-01-04T15:11:00-06:00",
+      "found_at": "2026-10-21T16:02:26+00:00",
+      "link": "https://www.aviasales.com/search/DCA2312SAL04011?t=AA17980269601798121460001635DCACLTMIASAL17990754601799141580001042SALMIADCA_9cdd52a49ce12835f43d9ccd34d738da_127909&search_date=21102026&expected_price_uuid=01a15f33-193f-8040-6076-b005bbe8a59c&static_fare_key=TY%7CP1%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=OcnaF7gMPcpt05TOqWIL_w&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1563&marker=791370"
+    },
     {
       "origin": "IAD",
       "destination": "SAL",
