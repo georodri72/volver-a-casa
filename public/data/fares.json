@@ -1,13 +1,43 @@
 {
-  "status": "pending",
+  "status": "live",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-10-29T21:09:04+00:00",
+  "updated_at": "2026-10-30T01:02:24+00:00",
   "max_age_hours": 6,
   "currency": "usd",
   "market": "us",
-  "no_data": [
-    "DCA",
-    "IAD"
-  ],
-  "fares": []
+  "no_data": [],
+  "fares": [
+    {
+      "origin": "DCA",
+      "destination": "SAL",
+      "price": 1052,
+      "currency": "usd",
+      "round_trip": true,
+      "passengers": 1,
+      "trip_class": "economy",
+      "airline": "AA",
+      "transfers": 1,
+      "return_transfers": 1,
+      "departure_at": "2026-12-21T20:51:00-05:00",
+      "return_at": "2026-12-29T15:50:00-06:00",
+      "found_at": "2026-10-29T23:47:36+00:00",
+      "link": "https://www.aviasales.com/search/DCA2112SAL29121?t=AA17978862601797941820000986DCAMIASAL17985594001798621380000973SALDFWDCA_107b319eb81b676be6aa0e92f18414ca_85439&search_date=29102026&expected_price_uuid=01a18a0f-d5f5-8030-ad40-61107a8efc7c&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=_vhLQCcQZn_0A5qVgI1TUQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1052&marker=791370"
+    },
+    {
+      "origin": "IAD",
+      "destination": "SAL",
+      "price": 906,
+      "currency": "usd",
+      "round_trip": true,
+      "passengers": 1,
+      "trip_class": "economy",
+      "airline": "F9",
+      "transfers": 1,
+      "return_transfers": 1,
+      "departure_at": "2026-12-21T05:30:00-05:00",
+      "return_at": "2026-12-29T12:35:00-06:00",
+      "found_at": "2026-10-29T23:47:36+00:00",
+      "link": "https://www.aviasales.com/search/IAD2112SAL29121?t=F917978310001797858060000511IADATLSAL17985477001798591860000676SALATLIAD_ddb47a34e9afb79ce77bd00193b331b7_73615&search_date=29102026&expected_price_uuid=01a18a0f-d5f5-8030-ad40-61107a8efc7c&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=MU8Mh0JoMVE6iuV5JHd9xw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=906&marker=791370"
+    }
+  ]
 }
