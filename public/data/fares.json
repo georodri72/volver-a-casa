@@ -1,7 +1,7 @@
 {
   "status": "live",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-10-30T23:49:20+00:00",
+  "updated_at": "2026-10-31T05:45:30+00:00",
   "max_age_hours": 6,
   "currency": "usd",
   "market": "us",
@@ -10,34 +10,34 @@
     {
       "origin": "DCA",
       "destination": "SAL",
-      "price": 1072,
+      "price": 1317,
       "currency": "usd",
       "round_trip": true,
       "passengers": 1,
       "trip_class": "economy",
       "airline": "AA",
-      "transfers": 1,
-      "return_transfers": 1,
-      "departure_at": "2026-12-21T20:51:00-05:00",
-      "return_at": "2026-12-29T15:50:00-06:00",
-      "found_at": "2026-10-30T23:15:32+00:00",
-      "link": "https://www.aviasales.com/search/DCA2112SAL29121?t=AA17978862601797941820000986DCAMIASAL17985594001798621380000973SALDFWDCA_107b319eb81b676be6aa0e92f18414ca_86135&search_date=30102026&expected_price_uuid=01a18f18-d75f-8030-28c3-732690b5ed11&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=_vhLQCcQZn_0A5qVgI1TUQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1072&marker=791370"
+      "transfers": 2,
+      "return_transfers": 2,
+      "departure_at": "2026-12-19T11:56:00-05:00",
+      "return_at": "2026-12-26T13:17:00-06:00",
+      "found_at": "2026-10-31T02:59:38+00:00",
+      "link": "https://www.aviasales.com/search/DCA1912SAL26121?t=AA17976813601797775860001635DCACLTMIASAL17982910201798392840001637SALMIAPHLDCA_e707735076cf92186f116c7057f39274_105723&search_date=31102026&expected_price_uuid=01a18fe6-0199-8040-6cf4-f0d11a49d454&static_fare_key=TY%7CP1%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=wLURYL_Cyr2bXwYzkrirTg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1317&marker=791370"
     },
     {
       "origin": "IAD",
       "destination": "SAL",
-      "price": 876,
+      "price": 930,
       "currency": "usd",
       "round_trip": true,
       "passengers": 1,
       "trip_class": "economy",
       "airline": "F9",
-      "transfers": 2,
+      "transfers": 0,
       "return_transfers": 1,
-      "departure_at": "2026-12-21T05:35:00-05:00",
-      "return_at": "2026-12-29T12:35:00-06:00",
-      "found_at": "2026-10-30T23:15:32+00:00",
-      "link": "https://www.aviasales.com/search/IAD2112SAL29121?t=F917978313001797870600000715IADATLMIASAL17985477001798591860000676SALATLIAD_12e7757beae0b8236ec90cd3099483d9_70386&search_date=30102026&expected_price_uuid=01a18f18-d75f-8030-28c3-732690b5ed11&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=rNLD3ZBCV4xU700K8K-f7Q&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=876&marker=791370"
+      "departure_at": "2026-12-19T08:13:00-05:00",
+      "return_at": "2026-12-26T13:00:00-06:00",
+      "found_at": "2026-10-31T02:59:38+00:00",
+      "link": "https://www.aviasales.com/search/IAD1912SAL26121?t=F917976679801797681300000282IADSAL17982900001798332660000651SALATLIAD_45669695fc559dbee279c5a98c0733da_74680&search_date=31102026&expected_price_uuid=01a18fe6-0199-8040-6cf4-f0d11a49d454&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=a8mp6TbLT4yweQkksbFzlg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=930&marker=791370"
     }
   ]
 }
