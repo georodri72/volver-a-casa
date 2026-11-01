@@ -1,43 +1,13 @@
 {
-  "status": "live",
+  "status": "pending",
   "source": "Aviasales (Travelpayouts Data API)",
-  "updated_at": "2026-11-01T07:36:21+00:00",
+  "updated_at": "2026-11-01T15:13:28+00:00",
   "max_age_hours": 6,
   "currency": "usd",
   "market": "us",
-  "no_data": [],
-  "fares": [
-    {
-      "origin": "DCA",
-      "destination": "SAL",
-      "price": 744,
-      "currency": "usd",
-      "round_trip": true,
-      "passengers": 1,
-      "trip_class": "economy",
-      "airline": "AA",
-      "transfers": 1,
-      "return_transfers": 1,
-      "departure_at": "2027-01-08T05:00:00-05:00",
-      "return_at": "2027-01-17T15:07:00-06:00",
-      "found_at": "2026-11-01T02:10:04+00:00",
-      "link": "https://www.aviasales.com/search/DCA0801SAL17011?t=AA17993844001799413500000545DCAMIASAL18001984201800262980001016SALDFWDCA_f73fc5b844f40d86172878564047ff82_59726&search_date=01112026&expected_price_uuid=01a194de-fedd-8040-a810-82b774388ee1&static_fare_key=TY%7CP1%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=n5Naahn_mAaSeUn_irbXAg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=744&marker=791370"
-    },
-    {
-      "origin": "IAD",
-      "destination": "SAL",
-      "price": 341,
-      "currency": "usd",
-      "round_trip": true,
-      "passengers": 1,
-      "trip_class": "economy",
-      "airline": "CM",
-      "transfers": 1,
-      "return_transfers": 1,
-      "departure_at": "2027-01-08T01:13:00-05:00",
-      "return_at": "2027-01-13T07:30:00-06:00",
-      "found_at": "2026-11-01T03:15:13+00:00",
-      "link": "https://www.aviasales.com/search/IAD0801SAL13011?t=CM17993707801799412000000747IADPTYSAL17998254001799883120000902SALPTYIAD_df0d6f55ae15aa36a5797687ceaeb153_27375&search_date=01112026&expected_price_uuid=01a1951a-a28f-8040-6ca5-d3c45a692bbf&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=IFkUEL1HvS-dH6hbYik58w&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=341&marker=791370"
-    }
-  ]
+  "no_data": [
+    "DCA",
+    "IAD"
+  ],
+  "fares": []
 }
