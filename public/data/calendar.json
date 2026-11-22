@@ -1,6 +1,6 @@
 {
  "source": "Aviasales (Travelpayouts Data API, v3 grouped_prices)",
- "generated_at": "2026-11-21T17:59:07+00:00",
+ "generated_at": "2026-11-22T06:52:36+00:00",
  "currency": "usd",
  "market": "us",
  "origins": [
@@ -22,7 +22,7 @@
    "min_origin": "IAD",
    "min_depart_date": "2026-11-26",
    "min_seen_date": "2026-11-18",
-   "days_with_data": 5
+   "days_with_data": 4
   },
   {
    "month": "2026-12",
@@ -30,7 +30,7 @@
    "min_origin": "IAD",
    "min_depart_date": "2026-12-31",
    "min_seen_date": "2026-11-21",
-   "days_with_data": 19
+   "days_with_data": 20
   },
   {
    "month": "2027-01",
@@ -114,17 +114,6 @@
   }
  ],
  "days": [
-  {
-   "origin": "DCA",
-   "depart_date": "2026-11-23",
-   "return_date": "2026-11-27",
-   "price": 886,
-   "airline": "UA",
-   "transfers": 1,
-   "return_transfers": 1,
-   "seen_date": "2026-11-20",
-   "link": "https://www.aviasales.com/search/DCA2311SAL27111?t=UA17954467801795474020000514DCAEWRSAL17957628001795804320000632SALIAHDCA_b2cbdb16da18f9b7be79657adf7cc95c_72694&search_date=20112026&expected_price_uuid=01a1fb0c-1c7d-8040-2084-9b29e2b7fa0c&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=zoYsvo9cTnBJFI0hRADxOQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=886&marker=791370"
-  },
   {
    "origin": "IAD",
    "depart_date": "2026-11-24",
@@ -425,13 +414,13 @@
   {
    "origin": "DCA",
    "depart_date": "2026-12-19",
-   "return_date": "2026-12-26",
-   "price": 879,
-   "airline": "UA",
+   "return_date": "2026-12-25",
+   "price": 909,
+   "airline": "AA",
    "transfers": 1,
    "return_transfers": 1,
-   "seen_date": "2026-11-14",
-   "link": "https://www.aviasales.com/search/DCA1912SAL26121?t=UA17976927001797720420000522DCAEWRSAL17983292401798364280000524SALEWRDCA_e9132a76a0b05b81aafdfbdd68b3275f_72794&search_date=14112026&expected_price_uuid=01a1db11-835a-8040-ab9c-e86abe29feed&static_fare_key=TY%7CP0%7CH0%7CL1_1_0%7CCH0%7CR0%7CTBC1&itinerary_key=CvuXH0wmn5b_bT-nqrdcfg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=879&marker=791370"
+   "seen_date": "2026-11-17",
+   "link": "https://www.aviasales.com/search/DCA1912SAL25121?t=AA17976684001797689460000411DCAMIASAL17982046201798239540000522SALMIADCA_6d69cb919227a517c8e8a75f2c14d225_75098&search_date=17112026&expected_price_uuid=01a1e7c2-a6db-8040-a3f2-8524b957f1de&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=XpO9DxdA7c1tqv0zW6h53A&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=909&marker=791370"
   },
   {
    "origin": "IAD",
@@ -459,45 +448,45 @@
    "origin": "IAD",
    "depart_date": "2026-12-21",
    "return_date": "2026-12-29",
-   "price": 796,
+   "price": 786,
    "airline": "F9",
-   "transfers": 0,
+   "transfers": 1,
    "return_transfers": 1,
-   "seen_date": "2026-11-18",
-   "link": "https://www.aviasales.com/search/IAD2112SAL29121?t=F917978395801797852600000277IADSAL17985477001798591860000676SALATLIAD_5cc668ef5a80275097de4f53dfd4229d_65590&search_date=18112026&expected_price_uuid=01a1f112-0a99-8030-e7fb-61736230e2f5&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=gXX7psH5qGdYiKqlgzaVDw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=796&marker=791370"
+   "seen_date": "2026-11-22",
+   "link": "https://www.aviasales.com/search/IAD2112SAL29121?t=F917978313001797858060000506IADATLSAL17985477001798591860000676SALATLIAD_6c97dce96eb57f42f79ed607e1e18794_64512&search_date=22112026&expected_price_uuid=01a200ab-caf7-8030-a682-6f2d16a17692&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=WgrKNz9gDglJmIQnW-B66w&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=786&marker=791370"
   },
   {
    "origin": "DCA",
    "depart_date": "2026-12-21",
    "return_date": "2026-12-29",
-   "price": 1101,
+   "price": 1119,
    "airline": "UA",
    "transfers": 1,
    "return_transfers": 1,
-   "seen_date": "2026-11-18",
-   "link": "https://www.aviasales.com/search/DCA2112SAL29121?t=UA17978481001797893220000812DCAEWRSAL17985884401798623480000524SALEWRDCA_3e1ae065ef020eb7abe6843115af952e_90722&search_date=18112026&expected_price_uuid=01a1f112-0a99-8030-e7fb-61736230e2f5&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=0Fg85pWYWLL5IjlfU39ycw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1101&marker=791370"
+   "seen_date": "2026-11-22",
+   "link": "https://www.aviasales.com/search/DCA2112SAL29121?t=UA17978583601797893220000641DCAEWRSAL17985884401798633800000696SALEWRDCA_748218e5c14e37aae7353ac67a8470fc_91820&search_date=22112026&expected_price_uuid=01a200ab-caf7-8030-a682-6f2d16a17692&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=WCYllomsXzBGri6etH1sug&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1119&marker=791370"
   },
   {
    "origin": "IAD",
    "depart_date": "2026-12-22",
    "return_date": "2026-12-30",
-   "price": 807,
+   "price": 786,
    "airline": "F9",
-   "transfers": 0,
-   "return_transfers": 0,
-   "seen_date": "2026-11-18",
-   "link": "https://www.aviasales.com/search/IAD2212SAL30121?t=F917979259801797939000000277IADSAL17986395601798658760000260SALIAD_dba71c3cae7512036d1dfa2ce5e4b8ad_66491&search_date=18112026&expected_price_uuid=01a1f0f8-3339-8031-2989-e5910a73cf40&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=NX09wp0M0opcgluOM_C8jw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=807&marker=791370"
+   "transfers": 1,
+   "return_transfers": 1,
+   "seen_date": "2026-11-22",
+   "link": "https://www.aviasales.com/search/IAD2212SAL30121?t=F917979177001797944460000506IADATLSAL17986341001798678260000676SALATLIAD_cc13c043986542d4dc552cd5b97752eb_64512&search_date=22112026&expected_price_uuid=01a200a1-1d0b-8030-64c6-501057099a9e&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=WgrKNz9gDglJmIQnW-B66w&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=786&marker=791370"
   },
   {
    "origin": "DCA",
    "depart_date": "2026-12-22",
    "return_date": "2026-12-30",
-   "price": 1370,
+   "price": 1372,
    "airline": "UA",
    "transfers": 1,
    "return_transfers": 1,
-   "seen_date": "2026-11-18",
-   "link": "https://www.aviasales.com/search/DCA2212SAL30121?t=UA17979496801797974340000471DCAIAHSAL17986488001798717560001086SALIAHDCA_f3c45185bf2b2dcdf21519519409474a_112870&search_date=18112026&expected_price_uuid=01a1f0f8-3339-8031-2989-e5910a73cf40&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=xIvbH9dtLHO3t5_1TOrkCg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1370&marker=791370"
+   "seen_date": "2026-11-22",
+   "link": "https://www.aviasales.com/search/DCA2212SAL30121?t=UA17979381001797979620000752DCAEWRSAL17986748401798709880000524SALEWRDCA_838b0b956b65f612451f840ba82a3cd6_112647&search_date=22112026&expected_price_uuid=01a200a1-1d0b-8030-64c6-501057099a9e&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=yZt74bvms0Wu_CcF7k1zgQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1372&marker=791370"
   },
   {
    "origin": "IAD",
@@ -523,25 +512,47 @@
   },
   {
    "origin": "IAD",
-   "depart_date": "2026-12-26",
-   "return_date": "2027-01-02",
-   "price": 434,
-   "airline": "AV",
-   "transfers": 0,
+   "depart_date": "2026-12-25",
+   "return_date": "2026-12-31",
+   "price": 475,
+   "airline": "F9",
+   "transfers": 1,
    "return_transfers": 1,
    "seen_date": "2026-11-21",
-   "link": "https://www.aviasales.com/search/IAD2612SAL02011?t=AV17983101001798322700000270IADSAL17989284001799024700001545SALGUAIAD_540103fc18ed25655af78ede7f1499dd_35586&search_date=21112026&expected_price_uuid=01a1fe53-a445-8040-25fd-453b3dd91f54&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=_t7ZtGLQRV8YUSu-Qye3hw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=434&marker=791370"
+   "link": "https://www.aviasales.com/search/IAD2512SAL31121?t=F917982354001798275900000735IADMCOSAL17987205001798764660000676SALATLIAD_c78f29d2dd8cc2dccd6082e723098f27_38986&search_date=21112026&expected_price_uuid=01a1ff6f-6f50-8040-6868-4532e3d11d4d&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=AUY3DJBOMeorbR81BwZHoQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=475&marker=791370"
+  },
+  {
+   "origin": "DCA",
+   "depart_date": "2026-12-25",
+   "return_date": "2026-12-31",
+   "price": 930,
+   "airline": "AA",
+   "transfers": 1,
+   "return_transfers": 1,
+   "seen_date": "2026-11-21",
+   "link": "https://www.aviasales.com/search/DCA2512SAL31121?t=AA17982050401798294260001547DCAMIASAL17987298601798763280000497SALMIADCA_98f5b0b3902ec6b6323afd2ad6be3fef_76328&search_date=21112026&expected_price_uuid=01a1ff6f-6f50-8040-6868-4532e3d11d4d&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=nSu312kNERF4UJ8aco0bcA&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=930&marker=791370"
+  },
+  {
+   "origin": "IAD",
+   "depart_date": "2026-12-26",
+   "return_date": "2027-01-12",
+   "price": 814,
+   "airline": "AV",
+   "transfers": 0,
+   "return_transfers": 0,
+   "seen_date": "2026-11-16",
+   "link": "https://www.aviasales.com/search/IAD2612SAL12011?t=AV17983101001798322700000270IADSAL17997915001799810100000250SALIAD_07aee8992ddb5163249c55486247df22_67196&search_date=16112026&expected_price_uuid=01a1e62f-59f0-8040-6dd0-ee010d8e2751&static_fare_key=TY%7CP1%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=O1oxr4QhyyR5fJ1oog3NpQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=814&marker=791370"
   },
   {
    "origin": "DCA",
    "depart_date": "2026-12-26",
-   "return_date": "2027-01-02",
-   "price": 852,
-   "airline": "UA",
+   "return_date": "2027-01-12",
+   "price": 1148,
+   "airline": "AA",
    "transfers": 1,
    "return_transfers": 1,
-   "seen_date": "2026-11-21",
-   "link": "https://www.aviasales.com/search/DCA2612SAL02011?t=UA17982648001798319940000979DCAIAHSAL17988555001798890360000521SALIAHDCA_f4449d725a57cc8e80bd0b2c2aa2c08d_69968&search_date=21112026&expected_price_uuid=01a1fe53-a445-8040-25fd-453b3dd91f54&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=z1El5iGMxjVqVJE25GuLvQ&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=852&marker=791370"
+   "seen_date": "2026-11-16",
+   "link": "https://www.aviasales.com/search/DCA2612SAL12011?t=AA17982732001798294260000411DCAMIASAL17997664201799830800001013SALDFWDCA_7ffc2d041100b24ae8538bc75901630c_94828&search_date=16112026&expected_price_uuid=01a1e62f-59f0-8040-6dd0-ee010d8e2751&static_fare_key=TY%7CP1%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=lBM_V54J8gNck7fHNIzhjA&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=1148&marker=791370"
   },
   {
    "origin": "IAD",
@@ -568,24 +579,24 @@
   {
    "origin": "IAD",
    "depart_date": "2026-12-28",
-   "return_date": "2027-01-09",
-   "price": 359,
-   "airline": "F9",
+   "return_date": "2027-01-02",
+   "price": 443,
+   "airline": "AV",
    "transfers": 1,
    "return_transfers": 1,
    "seen_date": "2026-11-21",
-   "link": "https://www.aviasales.com/search/IAD2812SAL09011?t=F917984361001798462860000506IADATLSAL17994901201799594040001672SALMCOIAD_3d0cf3aaa3c1146d6c9d6d7c53a6ef1b_29474&search_date=21112026&expected_price_uuid=01a1ff3b-e3bf-8040-af7f-30faf1c0baee&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=nw0t7L_OjQNGvJ3kkCPabg&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=359&marker=791370"
+   "link": "https://www.aviasales.com/search/IAD2812SAL02011?t=AV17984250001798455000000560IADGUASAL17989284001799024700001545SALGUAIAD_60450ac9a25f216c2c2d35c743629c1f_36394&search_date=21112026&expected_price_uuid=01a1fe4f-39e2-8040-abcb-6a7ee19789bb&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=2PLIP9Y0pOafmzIizcYrJA&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=443&marker=791370"
   },
   {
    "origin": "DCA",
    "depart_date": "2026-12-28",
-   "return_date": "2027-01-09",
-   "price": 628,
-   "airline": "AA",
+   "return_date": "2027-01-02",
+   "price": 815,
+   "airline": "UA",
    "transfers": 1,
    "return_transfers": 1,
    "seen_date": "2026-11-21",
-   "link": "https://www.aviasales.com/search/DCA2812SAL09011?t=AA17984340001798460220000497DCAMIASAL17995072201799571600001013SALDFWDCA_36dff72f8a034f7b5af5491ac14b7572_51550&search_date=21112026&expected_price_uuid=01a1ff3b-e3bf-8040-af7f-30faf1c0baee&static_fare_key=TY%7CP0%7CH1%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=6HiaOkwFSsak0tURVAhchw&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=628&marker=791370"
+   "link": "https://www.aviasales.com/search/DCA2812SAL02011?t=UA17984448001798492740000859DCAIAHSAL17988555001798890360000521SALIAHDCA_d7b814ba0f2fd11945ee2fecad96370a_66855&search_date=21112026&expected_price_uuid=01a1fe4f-39e2-8040-abcb-6a7ee19789bb&static_fare_key=TY%7CP0%7CH0%7CL0%7CCH0%7CR0%7CTBC0&itinerary_key=NNkRepdyYVzR4UxjubOX2g&origin_airports=0&destination_airports=1&expected_price_source=share&expected_price_currency=usd&expected_price=815&marker=791370"
   },
   {
    "origin": "IAD",
